@@ -19,19 +19,19 @@ export default function QuizEditor() {
   const setSelectedQuiz = useQuizStore((s) => s.setSelectedQuiz);
   const publishQuiz = useQuizStore((s) => s.publishQuiz);
 
-  // ✅ Make sure the selected quiz is active
+  
   useEffect(() => {
     if (quizId) {
       setSelectedQuiz(quizId);
     }
   }, [quizId, setSelectedQuiz]);
 
-  // 🛑 If quiz not found → Show error
+
   if (!selectedQuiz) {
     return <div className="p-6 text-red-500">Quiz not found!</div>;
   }
 
-  // ✅ Handle drag & drop
+
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
     if (!destination) return;
@@ -39,24 +39,24 @@ export default function QuizEditor() {
     const quizId = useQuizStore.getState().selectedQuizId;
     if (!quizId) return;
 
-    // ⬇️ Adding a block from sidebar → canvas
+    
     if (source.droppableId === "SIDEBAR" && destination.droppableId === "CANVAS") {
       addBlock(quizId, draggableId as any);
       return;
     }
 
-    // ⬇️ Reordering blocks inside canvas
+  
     if (source.droppableId === "CANVAS" && destination.droppableId === "CANVAS") {
       const quizzes = useQuizStore.getState().quizzes;
       const quiz = quizzes.find((q) => q.id === quizId);
       if (!quiz) return;
 
-      // Reorder blocks
+
       const reordered = Array.from(quiz.blocks);
       const [moved] = reordered.splice(source.index, 1);
       reordered.splice(destination.index, 0, moved);
 
-      // Update Zustand + localStorage
+      
       const updatedQuizzes = quizzes.map((q) =>
         q.id === quizId ? { ...q, blocks: reordered } : q
       );
@@ -69,16 +69,16 @@ export default function QuizEditor() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex h-screen">
-        {/* Left Sidebar */}
+      
         <SidebarBlocks />
 
-        {/* Canvas */}
+       
         <Canvas />
 
-        {/* Properties Panel */}
+      
         <PropertiesPanel />
 
-        {/* Publish Button */}
+      
         <div className="absolute bottom-6 right-6 flex gap-4">
           <button
             onClick={() => useQuizStore.getState().saveQuiz(selectedQuiz.id)}

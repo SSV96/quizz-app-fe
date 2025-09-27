@@ -21,6 +21,25 @@ interface QuizStore {
   deleteQuiz: (quizId: string) => void;
 }
 
+interface AnswerState {
+  answers: Record<string, string | string[]>;
+  setAnswer: (blockId: string, value: string | string[]) => void;
+  resetAnswers: () => void;
+}
+
+
+export const useQuizAnswerStore = create<AnswerState>((set) => ({
+  answers: {},
+  setAnswer: (blockId, value) =>
+    set((state) => ({
+      answers: {
+        ...state.answers,
+        [blockId]: value,
+      },
+    })),
+  resetAnswers: () => set({ answers: {} }),
+}));
+
 export const useQuizStore = create<QuizStore>((set, get) => ({
   quizzes: [],
   selectedQuizId: null,
@@ -48,6 +67,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
 
   setSelectedQuiz: (id) => set({ selectedQuizId: id, selectedBlockId: null }),
   selectBlock: (id) => set({ selectedBlockId: id }),
+
 
   addBlock: (quizId, type) =>
     set((state) => {
@@ -104,7 +124,6 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
                 properties: {
                   ...block.properties,
                   ...properties,
-                  // Handle nested question updates safely
                   question: properties.question
                     ? {
                         ...block.properties.question,

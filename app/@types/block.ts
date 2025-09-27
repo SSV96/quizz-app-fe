@@ -11,6 +11,7 @@ export interface QuestionPayload {
   id?: string; 
   kind: QuestionKind;
   text: string;
+  textAnswer?:string;
   options?: QuestionOption[];
   correctOptionIds?: string[];
 }
@@ -19,6 +20,7 @@ export interface Block {
   id: string;
   type: BlockType;
   properties: {
+    options: any;
     
     text?: string;
    

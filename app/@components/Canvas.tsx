@@ -81,7 +81,7 @@ export default function Canvas() {
                       )}
                     </div>
 
-                    {/* Delete button */}
+               
                     <button
                       onClick={() => deleteBlock(quiz!.id, block.id)}
                       className="ml-2 text-red-600 hover:text-red-800 font-bold"

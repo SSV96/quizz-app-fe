@@ -14,7 +14,7 @@ published ,deleteQuiz}) => {
   return (
     <div
       key={id}
-      className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+      className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 w-[800px]"
     >
       <Link
         href={`/quiz/${id}`}
@@ -23,12 +23,12 @@ published ,deleteQuiz}) => {
         {title}
       </Link>
      
-      <p >{createdAt}</p>
-      <p>{updatedAt}</p>
-      <p className={`${published ?" text-green-600":""}`}>{published ? "" : "not"} Published</p>
+      <p className='px-2'>{createdAt}</p>
+      <p className='px-2'>{updatedAt}</p>
+      <p className={`${published ?" text-green-600":""} px-2`}>{published ? "" : "not"} Published</p>
       <button
         onClick={() => deleteQuiz(id)}
-        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+        className="pl-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 w-20"
       >
         Delete
       </button>

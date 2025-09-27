@@ -15,19 +15,19 @@ export default function PropertiesPanel() {
 
   const [localQuestion, setLocalQuestion] = useState(block?.properties.question);
 
-  // When block changes, sync local state
+ 
   useEffect(() => {
     if (block?.type === "question") {
       setLocalQuestion(block.properties.question);
     }
   }, [block]);
 
-  // 🟢 Debounced effect: Updates Zustand AFTER user stops typing
+  
   useEffect(() => {
     if (block?.type === "question" && localQuestion) {
       const timeout = setTimeout(() => {
         updateBlock(block.id, { question: localQuestion });
-      }, 300); // 300ms debounce
+      }, 300);
       return () => clearTimeout(timeout);
     }
   }, [localQuestion, block?.id, block?.type, updateBlock]);
@@ -77,12 +77,12 @@ export default function PropertiesPanel() {
     <div style={{ width: 320 }} className="p-4 border-l bg-white">
       <h3 className="font-bold mb-3">Edit Question</h3>
 
-      {/* Question Text */}
+     
       <p className="font-semibold text-gray-700 mb-3">
         {localQuestion?.text || "Untitled Question"}
       </p>
 
-      {/* Question Type */}
+     
       <label className="block mb-1 font-medium">Question Type</label>
       <select
         value={localQuestion?.kind || "single"}
@@ -100,7 +100,7 @@ export default function PropertiesPanel() {
         <option value="text">Text Answer</option>
       </select>
 
-      {/* Show options only for single/multi */}
+     
       {localQuestion?.kind !== "text" && (
         <>
           <h4 className="font-semibold mb-2">Options</h4>
@@ -148,7 +148,7 @@ export default function PropertiesPanel() {
                   }}
                 />
               )}
-              {/* Delete Option */}
+             
               <button
                 onClick={() => handleDeleteOption(opt.id)}
                 className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
@@ -158,7 +158,7 @@ export default function PropertiesPanel() {
             </div>
           ))}
 
-          {/* Add Option */}
+          
           <button
             className="mt-2 px-4 py-2 bg-green-600 text-white rounded"
             onClick={() => {
@@ -175,7 +175,20 @@ export default function PropertiesPanel() {
             + Add Option
           </button>
         </>
-      )}
+      )
+      
+      }
+      {localQuestion?.kind == "text" && <input
+        type="text"
+        value={localQuestion.textAnswer ?? ""}
+        onChange={(e) =>
+          setLocalQuestion({
+            ...localQuestion!,
+            textAnswer: e.target.value,
+          })
+        }
+        className="flex-1 border px-3 py-1 rounded"
+      />}
     </div>
   );
 }

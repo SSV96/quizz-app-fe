@@ -45,13 +45,13 @@ export default function RootLayout({
             },
             success: {
               style: {
-                background: "#22c55e", // Tailwind green-500
+                background: "#22c55e", 
                 color: "#fff",
               },
             },
             error: {
               style: {
-                background: "#ef4444", // Tailwind red-500
+                background: "#ef4444",
                 color: "#fff",
               },
             },

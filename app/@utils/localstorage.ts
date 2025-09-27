@@ -4,7 +4,7 @@ const STORAGE_KEY = "quiz_app.quizzes";
 export const LocalStorage = {
   getQuizzes: <T = any>(): T[] => {
     if (typeof window === "undefined") {
-      return []; // Prevent SSR crashes
+      return [];  
     }
     try {
       const data = localStorage.getItem(STORAGE_KEY);
@@ -17,7 +17,7 @@ export const LocalStorage = {
 
   saveQuizzes: (quizzes: any[]) => {
     if (typeof window === "undefined") {
-      return; // Don't run on the server
+      return;
     }
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(quizzes));
