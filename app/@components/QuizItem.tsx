@@ -22,16 +22,16 @@ published ,deleteQuiz}) => {
       >
         {title}
       </Link>
+     
+      <p >{createdAt}</p>
+      <p>{updatedAt}</p>
+      <p className={`${published ?" text-green-600":""}`}>{published ? "" : "not"} Published</p>
       <button
         onClick={() => deleteQuiz(id)}
         className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
       >
         Delete
       </button>
-      <p>{createdAt}</p>
-      <p>{updatedAt}</p>
-      <p>{published ? "" : "not"} Published</p>
-
     </div>
   )
 }

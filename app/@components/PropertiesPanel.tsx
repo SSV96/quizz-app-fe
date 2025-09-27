@@ -15,11 +15,22 @@ export default function PropertiesPanel() {
 
   const [localQuestion, setLocalQuestion] = useState(block?.properties.question);
 
+  // When block changes, sync local state
   useEffect(() => {
     if (block?.type === "question") {
       setLocalQuestion(block.properties.question);
     }
   }, [block]);
+
+  // 🟢 Debounced effect: Updates Zustand AFTER user stops typing
+  useEffect(() => {
+    if (block?.type === "question" && localQuestion) {
+      const timeout = setTimeout(() => {
+        updateBlock(block.id, { question: localQuestion });
+      }, 300); // 300ms debounce
+      return () => clearTimeout(timeout);
+    }
+  }, [localQuestion, block?.id, block?.type, updateBlock]);
 
   if (!block) {
     return (
@@ -30,12 +41,16 @@ export default function PropertiesPanel() {
   }
 
   const handleDeleteBlock = () => {
-    deleteBlock(block.id);
+    deleteBlock(quiz?.id ||"",block.id);
     selectBlock(null);
   };
 
-  const handleSave = () => {
-    updateBlock(block.id, { question: localQuestion });
+  const handleDeleteOption = (optionId: string) => {
+    setLocalQuestion((prev) => ({
+      ...prev!,
+      options: prev?.options?.filter((o) => o.id !== optionId),
+      correctOptionIds: prev?.correctOptionIds?.filter((id) => id !== optionId),
+    }));
   };
 
   if (block.type !== "question") {
@@ -58,20 +73,14 @@ export default function PropertiesPanel() {
     );
   }
 
-  
   return (
     <div style={{ width: 320 }} className="p-4 border-l bg-white">
       <h3 className="font-bold mb-3">Edit Question</h3>
 
       {/* Question Text */}
-      <input
-        type="text"
-        className="w-full border px-3 py-2 rounded mb-3"
-        value={localQuestion?.text || ""}
-        onChange={(e) =>
-          setLocalQuestion({ ...localQuestion!, text: e.target.value })
-        }
-      />
+      <p className="font-semibold text-gray-700 mb-3">
+        {localQuestion?.text || "Untitled Question"}
+      </p>
 
       {/* Question Type */}
       <label className="block mb-1 font-medium">Question Type</label>
@@ -102,7 +111,7 @@ export default function PropertiesPanel() {
                 value={opt.text}
                 onChange={(e) =>
                   setLocalQuestion({
-                    ...localQuestion,
+                    ...localQuestion!,
                     options: localQuestion.options?.map((o) =>
                       o.id === opt.id ? { ...o, text: e.target.value } : o
                     ),
@@ -117,7 +126,7 @@ export default function PropertiesPanel() {
                   checked={localQuestion.correctOptionIds?.[0] === opt.id}
                   onChange={() =>
                     setLocalQuestion({
-                      ...localQuestion,
+                      ...localQuestion!,
                       correctOptionIds: [opt.id],
                     })
                   }
@@ -129,7 +138,7 @@ export default function PropertiesPanel() {
                   onChange={(e) => {
                     const checked = e.target.checked;
                     setLocalQuestion({
-                      ...localQuestion,
+                      ...localQuestion!,
                       correctOptionIds: checked
                         ? [...(localQuestion.correctOptionIds || []), opt.id]
                         : localQuestion.correctOptionIds?.filter(
@@ -139,14 +148,21 @@ export default function PropertiesPanel() {
                   }}
                 />
               )}
+              {/* Delete Option */}
+              <button
+                onClick={() => handleDeleteOption(opt.id)}
+                className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                ✕
+              </button>
             </div>
           ))}
 
-          {/* Add Option Button */}
+          {/* Add Option */}
           <button
             className="mt-2 px-4 py-2 bg-green-600 text-white rounded"
             onClick={() => {
-              const optionCount = localQuestion?.options?.length ?? 0; // ✅ fallback to 0
+              const optionCount = localQuestion?.options?.length ?? 0;
               setLocalQuestion({
                 ...localQuestion!,
                 options: [
@@ -160,22 +176,6 @@ export default function PropertiesPanel() {
           </button>
         </>
       )}
-
-      {/* Save + Delete */}
-      <div className="flex gap-2 mt-4">
-        <button
-          onClick={handleSave}
-          className="flex-1 bg-blue-600 text-white py-2 rounded"
-        >
-          Save Question
-        </button>
-        <button
-          onClick={handleDeleteBlock}
-          className="flex-1 bg-red-600 text-white py-2 rounded"
-        >
-          Delete Question
-        </button>
-      </div>
     </div>
   );
 }
