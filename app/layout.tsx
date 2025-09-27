@@ -1,8 +1,8 @@
+import { Toaster } from "react-hot-toast";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./@components/Header";
-import Snackbar from '@mui/material/Snackbar';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,17 +34,32 @@ export default function RootLayout({
           {children}
 
         </main>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              background: "#333",
+              color: "#fff",
+              borderRadius: "8px",
+              padding: "10px",
+            },
+            success: {
+              style: {
+                background: "#22c55e", // Tailwind green-500
+                color: "#fff",
+              },
+            },
+            error: {
+              style: {
+                background: "#ef4444", // Tailwind red-500
+                color: "#fff",
+              },
+            },
+          }}
+        />
 
 
-
-        {/* <Button onClick={handleClick}>Open Snackbar</Button> */}
-        {/* <Snackbar
-          open={true}
-          autoHideDuration={6000}
-          // onClose={handleClose}
-          message="Note archived"
-          // action={action}
-        /> */}
+       
             </body>
     </html>
   );
