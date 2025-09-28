@@ -22,7 +22,7 @@ export default function Canvas() {
     updateBlock(blockId, {
       question: {
         text,
-        kind: "text"
+        kind: "text",
       },
     });
   };
@@ -48,12 +48,16 @@ export default function Canvas() {
                     ref={prov.innerRef}
                     {...prov.draggableProps}
                     {...prov.dragHandleProps}
-                    className={`p-3 mb-3 rounded border shadow-sm bg-white cursor-pointer flex justify-between items-center ${block.id === selectedBlockId
+                    className={`p-3 mb-3 rounded border shadow-sm bg-white cursor-pointer flex justify-between items-center ${
+                      block.id === selectedBlockId
                         ? "border-blue-500 bg-blue-50"
                         : "border-gray-300"
-                      }`}
+                    }`}
                   >
-                    <div onClick={() => selectBlock(block.id)} className="flex-1">
+                    <div
+                      onClick={() => selectBlock(block.id)}
+                      className="flex-1"
+                    >
                       {block.type === "heading" && (
                         <input
                           type="text"
@@ -81,7 +85,6 @@ export default function Canvas() {
                       )}
                     </div>
 
-               
                     <button
                       onClick={() => deleteBlock(quiz!.id, block.id)}
                       className="ml-2 text-red-600 hover:text-red-800 font-bold"

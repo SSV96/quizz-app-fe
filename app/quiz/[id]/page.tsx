@@ -62,17 +62,18 @@ export default function QuizPreview() {
   const handleSubmit = () => {
     let correct = 0;
     blocks.forEach((block) => {
-      console.log(block)
-    console.log({answers})
+      console.log(block);
+      console.log({ answers });
       const userAnswer = answers[block.id];
       const correctIds = block.properties.question?.correctOptionIds || [];
-console.log({
-  userAnswer,
-  correctIds
-})
+      console.log({
+        userAnswer,
+        correctIds,
+      });
       if (block.properties.question?.kind === "text") {
-        const correctText =
-          block.properties.question?.textAnswer?.trim().toLowerCase();
+        const correctText = block.properties.question?.textAnswer
+          ?.trim()
+          .toLowerCase();
         if (
           typeof userAnswer === "string" &&
           userAnswer.trim().toLowerCase() === correctText
@@ -80,28 +81,23 @@ console.log({
           correct++;
         }
       } else if (Array.isArray(userAnswer)) {
-        console.log("CHECKING")
+        console.log("CHECKING");
         const checkingLength = userAnswer.length === correctIds.length;
         const every = userAnswer.every((id) => correctIds.includes(id));
-        console.log({checkingLength,
-          every
-        })
+        console.log({ checkingLength, every });
         if (
           userAnswer.length === correctIds.length &&
           userAnswer.every((id) => correctIds.includes(id))
         ) {
           correct++;
         }
-      }
-      else if (block.properties.question?.kind === "single"){
-        if (
-         userAnswer === correctIds[0]
-        ) {
+      } else if (block.properties.question?.kind === "single") {
+        if (userAnswer === correctIds[0]) {
           correct++;
         }
       }
     });
-console.log({correct})
+    console.log({ correct });
     setScore(correct);
     setIsSubmitted(true);
   };
@@ -130,7 +126,9 @@ console.log({correct})
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">{quiz.title || "Untitled Quiz"}</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        {quiz.title || "Untitled Quiz"}
+      </h1>
 
       {currentBlock ? (
         <div className="space-y-6">
@@ -162,7 +160,9 @@ console.log({correct})
                           : answers[currentBlock.id] === opt.id
                       }
                       onChange={(e) => {
-                        if (currentBlock.properties.question?.kind === "multi") {
+                        if (
+                          currentBlock.properties.question?.kind === "multi"
+                        ) {
                           const prev =
                             (answers[currentBlock.id] as string[]) || [];
                           if (e.target.checked) {
@@ -170,7 +170,7 @@ console.log({correct})
                           } else {
                             setAnswer(
                               currentBlock.id,
-                              prev.filter((id) => id !== opt.id)
+                              prev.filter((id) => id !== opt.id),
                             );
                           }
                         } else {

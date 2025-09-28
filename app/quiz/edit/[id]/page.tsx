@@ -20,18 +20,15 @@ export default function QuizEditor() {
   const setSelectedQuiz = useQuizStore((s) => s.setSelectedQuiz);
   const publishQuiz = useQuizStore((s) => s.publishQuiz);
 
-  
   useEffect(() => {
     if (quizId) {
       setSelectedQuiz(quizId);
     }
   }, [quizId, setSelectedQuiz]);
 
-
   if (!selectedQuiz) {
     return <div className="p-6 text-red-500">Quiz not found!</div>;
   }
-
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -40,26 +37,28 @@ export default function QuizEditor() {
     const quizId = useQuizStore.getState().selectedQuizId;
     if (!quizId) return;
 
-    
-    if (source.droppableId === "SIDEBAR" && destination.droppableId === "CANVAS") {
+    if (
+      source.droppableId === "SIDEBAR" &&
+      destination.droppableId === "CANVAS"
+    ) {
       addBlock(quizId, draggableId as BlockType);
       return;
     }
 
-  
-    if (source.droppableId === "CANVAS" && destination.droppableId === "CANVAS") {
+    if (
+      source.droppableId === "CANVAS" &&
+      destination.droppableId === "CANVAS"
+    ) {
       const quizzes = useQuizStore.getState().quizzes;
       const quiz = quizzes.find((q) => q.id === quizId);
       if (!quiz) return;
-
 
       const reordered = Array.from(quiz.blocks);
       const [moved] = reordered.splice(source.index, 1);
       reordered.splice(destination.index, 0, moved);
 
-      
       const updatedQuizzes = quizzes.map((q) =>
-        q.id === quizId ? { ...q, blocks: reordered } : q
+        q.id === quizId ? { ...q, blocks: reordered } : q,
       );
 
       LocalStorage.saveQuizzes(updatedQuizzes);
@@ -70,16 +69,12 @@ export default function QuizEditor() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex h-screen">
-      
         <SidebarBlocks />
 
-       
         <Canvas />
 
-      
         <PropertiesPanel />
 
-      
         <div className="absolute bottom-6 right-6 flex gap-4">
           <button
             onClick={() => useQuizStore.getState().saveQuiz()}
@@ -95,7 +90,6 @@ export default function QuizEditor() {
             Publish Quiz
           </button>
         </div>
-
       </div>
     </DragDropContext>
   );

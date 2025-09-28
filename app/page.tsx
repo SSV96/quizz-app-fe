@@ -16,11 +16,10 @@ export default function HomePage() {
     <div className="p-6 max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Quizzes</h1>
-
       </div>
 
       {quizzes.length === 0 ? (
-        <p className="text-gray-500">No  quizzes yet.</p>
+        <p className="text-gray-500">No quizzes yet.</p>
       ) : (
         <div className="space-y-3">
           {quizzes.map((quiz) => (

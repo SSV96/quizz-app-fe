@@ -14,7 +14,10 @@ interface QuizStore {
   setSelectedQuiz: (id: string | null) => void;
   selectBlock: (id: string | null) => void;
   addBlock: (quizId: string, type: Block["type"]) => void;
-  updateBlock: (blockId: string, properties: Partial<Block["properties"]>) => void;
+  updateBlock: (
+    blockId: string,
+    properties: Partial<Block["properties"]>,
+  ) => void;
   deleteBlock: (quizId: string, blockId: string) => void;
   saveQuiz: () => void;
   publishQuiz: (quizId: string) => void;
@@ -26,7 +29,6 @@ interface AnswerState {
   setAnswer: (blockId: string, value: string | string[]) => void;
   resetAnswers: () => void;
 }
-
 
 export const useQuizAnswerStore = create<AnswerState>((set) => ({
   answers: {},
@@ -68,7 +70,6 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   setSelectedQuiz: (id) => set({ selectedQuizId: id, selectedBlockId: null }),
   selectBlock: (id) => set({ selectedBlockId: id }),
 
-
   addBlock: (quizId, type) =>
     set((state) => {
       const newBlock: Block =
@@ -97,15 +98,15 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
                   type === "heading"
                     ? "Heading"
                     : type === "button"
-                    ? "Click Me"
-                    : "Footer",
+                      ? "Click Me"
+                      : "Footer",
               },
             };
 
       const updatedQuizzes = state.quizzes.map((quiz) =>
         quiz.id === quizId
           ? { ...quiz, blocks: [...quiz.blocks, newBlock] }
-          : quiz
+          : quiz,
       );
 
       LocalStorage.saveQuizzes(updatedQuizzes);
@@ -132,7 +133,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
                     : block.properties.question,
                 },
               }
-            : block
+            : block,
         ),
       }));
 
@@ -148,7 +149,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
               ...quiz,
               blocks: quiz.blocks.filter((block) => block.id !== blockId),
             }
-          : quiz
+          : quiz,
       );
       LocalStorage.saveQuizzes(updatedQuizzes);
       return { quizzes: updatedQuizzes, selectedBlockId: null };
@@ -163,7 +164,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   publishQuiz: (quizId) =>
     set((state) => {
       const updatedQuizzes = state.quizzes.map((quiz) =>
-        quiz.id === quizId ? { ...quiz, published: true } : quiz
+        quiz.id === quizId ? { ...quiz, published: true } : quiz,
       );
       LocalStorage.saveQuizzes(updatedQuizzes);
       toast.success("🚀 Quiz published successfully!");
@@ -172,9 +173,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
 
   deleteQuiz: (quizId) =>
     set((state) => {
-      const updatedQuizzes = state.quizzes.filter(
-        (quiz) => quiz.id !== quizId
-      );
+      const updatedQuizzes = state.quizzes.filter((quiz) => quiz.id !== quizId);
       LocalStorage.saveQuizzes(updatedQuizzes);
       toast.success("🗑️ Quiz deleted successfully!");
       return {

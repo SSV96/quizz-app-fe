@@ -16,7 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Quizz app",
-  description: "A Quizz builder application , you can create and publish quizess in no time",
+  description:
+    "A Quizz builder application , you can create and publish quizess in no time",
 };
 
 export default function RootLayout({
@@ -29,11 +30,8 @@ export default function RootLayout({
       <body
         className={`bg-gray-50 text-gray-900 min-h-screen   ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header/>
-        <main className="max-w-7xl mx-auto px-6 py-6">
-          {children}
-
-        </main>
+        <Header />
+        <main className="max-w-7xl mx-auto px-6 py-6">{children}</main>
         <Toaster
           position="top-right"
           toastOptions={{
@@ -45,7 +43,7 @@ export default function RootLayout({
             },
             success: {
               style: {
-                background: "#22c55e", 
+                background: "#22c55e",
                 color: "#fff",
               },
             },
@@ -57,10 +55,7 @@ export default function RootLayout({
             },
           }}
         />
-
-
-       
-            </body>
+      </body>
     </html>
   );
 }
