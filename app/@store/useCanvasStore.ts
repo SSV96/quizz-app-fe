@@ -1,8 +1,8 @@
-import { create } from "zustand";
-import { nanoid } from "nanoid";
-import { LocalStorage } from "../@utils/localstorage";
-import toast from "react-hot-toast";
-import { Block, Quiz } from "../@types/block";
+import { create } from 'zustand';
+import { nanoid } from 'nanoid';
+import { LocalStorage } from '../@utils/localstorage';
+import toast from 'react-hot-toast';
+import { Block, Quiz } from '../@types/block';
 
 interface QuizStore {
   quizzes: Quiz[];
@@ -13,15 +13,13 @@ interface QuizStore {
   createQuiz: (title: string) => Quiz;
   setSelectedQuiz: (id: string | null) => void;
   selectBlock: (id: string | null) => void;
-  addBlock: (quizId: string, type: Block["type"]) => void;
-  updateBlock: (
-    blockId: string,
-    properties: Partial<Block["properties"]>
-  ) => void;
+  addBlock: (quizId: string, type: Block['type']) => void;
+  updateBlock: (blockId: string, properties: Partial<Block['properties']>) => void;
   deleteBlock: (quizId: string, blockId: string) => void;
   saveQuiz: () => void;
   publishQuiz: (quizId: string) => void;
   deleteQuiz: (quizId: string) => void;
+  togglePublishQuiz: (quizId: string) => void;
 }
 
 interface AnswerState {
@@ -49,6 +47,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
 
   loadQuizzes: () => {
     const storedQuizzes = LocalStorage.getQuizzes();
+
     set({ quizzes: storedQuizzes });
   },
 
@@ -73,18 +72,18 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   addBlock: (quizId, type) =>
     set((state) => {
       const newBlock: Block =
-        type === "question"
+        type === 'question'
           ? {
               id: nanoid(),
               type,
               properties: {
                 question: {
                   id: nanoid(),
-                  kind: "single",
-                  text: "New Question",
+                  kind: 'single',
+                  text: 'New Question',
                   options: [
-                    { id: nanoid(), text: "Option 1" },
-                    { id: nanoid(), text: "Option 2" },
+                    { id: nanoid(), text: 'Option 1' },
+                    { id: nanoid(), text: 'Option 2' },
                   ],
                   correctOptionIds: [],
                 },
@@ -94,19 +93,12 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
               id: nanoid(),
               type,
               properties: {
-                text:
-                  type === "heading"
-                    ? "Heading"
-                    : type === "button"
-                      ? "Click Me"
-                      : "Footer",
+                text: type === 'heading' ? 'Heading' : type === 'button' ? 'Click Me' : 'Footer',
               },
             };
 
       const updatedQuizzes = state.quizzes.map((quiz) =>
-        quiz.id === quizId
-          ? { ...quiz, blocks: [...quiz.blocks, newBlock] }
-          : quiz
+        quiz.id === quizId ? { ...quiz, blocks: [...quiz.blocks, newBlock] } : quiz,
       );
 
       LocalStorage.saveQuizzes(updatedQuizzes);
@@ -133,7 +125,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
                     : block.properties.question,
                 },
               }
-            : block
+            : block,
         ),
       }));
 
@@ -149,7 +141,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
               ...quiz,
               blocks: quiz.blocks.filter((block) => block.id !== blockId),
             }
-          : quiz
+          : quiz,
       );
       LocalStorage.saveQuizzes(updatedQuizzes);
       return { quizzes: updatedQuizzes, selectedBlockId: null };
@@ -158,28 +150,33 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   saveQuiz: () => {
     const quizzes = get().quizzes;
     LocalStorage.saveQuizzes(quizzes);
-    toast.success("✅ Quiz saved successfully!");
+    toast.success(' Quiz saved successfully');
   },
 
   publishQuiz: (quizId) =>
     set((state) => {
       const updatedQuizzes = state.quizzes.map((quiz) =>
-        quiz.id === quizId ? { ...quiz, published: true } : quiz
+        quiz.id === quizId ? { ...quiz, published: true } : quiz,
       );
       LocalStorage.saveQuizzes(updatedQuizzes);
-      toast.success("🚀 Quiz published successfully!");
+      toast.success('Quiz published successfully');
       return { quizzes: updatedQuizzes };
     }),
-
+  togglePublishQuiz: (quizId) => {
+    const updatedQuizzes = get().quizzes.map((q) =>
+      q.id === quizId ? { ...q, published: !q.published } : q,
+    );
+    set({ quizzes: updatedQuizzes });
+    LocalStorage.saveQuizzes(updatedQuizzes);
+  },
   deleteQuiz: (quizId) =>
     set((state) => {
       const updatedQuizzes = state.quizzes.filter((quiz) => quiz.id !== quizId);
       LocalStorage.saveQuizzes(updatedQuizzes);
-      toast.success("🗑️ Quiz deleted successfully!");
+      toast.success('Quiz deleted successfully');
       return {
         quizzes: updatedQuizzes,
-        selectedQuizId:
-          state.selectedQuizId === quizId ? null : state.selectedQuizId,
+        selectedQuizId: state.selectedQuizId === quizId ? null : state.selectedQuizId,
         selectedBlockId: null,
       };
     }),

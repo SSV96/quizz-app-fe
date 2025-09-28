@@ -1,6 +1,7 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { useQuizStore } from "../@store/useCanvasStore";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { useQuizStore } from '../@store/useCanvasStore';
+import { Delete } from '@mui/icons-material';
 
 export default function PropertiesPanel() {
   const selectedBlockId = useQuizStore((s) => s.selectedBlockId);
@@ -13,18 +14,16 @@ export default function PropertiesPanel() {
   const quiz = quizzes.find((q) => q.id === selectedQuizId);
   const block = quiz?.blocks.find((b) => b.id === selectedBlockId);
 
-  const [localQuestion, setLocalQuestion] = useState(
-    block?.properties.question
-  );
+  const [localQuestion, setLocalQuestion] = useState(block?.properties.question);
 
   useEffect(() => {
-    if (block?.type === "question") {
+    if (block?.type === 'question') {
       setLocalQuestion(block.properties.question);
     }
   }, [block]);
 
   useEffect(() => {
-    if (block?.type === "question" && localQuestion) {
+    if (block?.type === 'question' && localQuestion) {
       const timeout = setTimeout(() => {
         updateBlock(block.id, { question: localQuestion });
       }, 300);
@@ -41,7 +40,7 @@ export default function PropertiesPanel() {
   }
 
   const handleDeleteBlock = () => {
-    deleteBlock(quiz?.id || "", block.id);
+    deleteBlock(quiz?.id || '', block.id);
     selectBlock(null);
   };
 
@@ -53,16 +52,11 @@ export default function PropertiesPanel() {
     }));
   };
 
-  if (block.type !== "question") {
+  if (block.type !== 'question') {
     return (
-      <div style={{ width: 320 }} className="p-4 border-l bg-white">
+      <div style={{ width: 320 }} className="p-4  bg-white">
         <h3 className="font-bold mb-3">Edit {block.type}</h3>
-        <input
-          type="text"
-          className="w-full border px-3 py-2 rounded"
-          value={block.properties.text || ""}
-          onChange={(e) => updateBlock(block.id, { text: e.target.value })}
-        />
+        <p className="w-full  px-3 py-2 ">{block.properties.text || ''}</p>
         <button
           className="mt-4 bg-red-600 text-white py-2 rounded w-full"
           onClick={handleDeleteBlock}
@@ -78,16 +72,16 @@ export default function PropertiesPanel() {
       <h3 className="font-bold mb-3">Edit Question</h3>
 
       <p className="font-semibold text-gray-700 mb-3">
-        {localQuestion?.text || "Untitled Question"}
+        {localQuestion?.text || 'Untitled Question'}
       </p>
 
       <label className="block mb-1 font-medium">Question Type</label>
       <select
-        value={localQuestion?.kind || "single"}
+        value={localQuestion?.kind || 'single'}
         onChange={(e) =>
           setLocalQuestion({
             ...localQuestion!,
-            kind: e.target.value as "single" | "multi" | "text",
+            kind: e.target.value as 'single' | 'multi' | 'text',
             correctOptionIds: [],
           })
         }
@@ -98,7 +92,7 @@ export default function PropertiesPanel() {
         <option value="text">Text Answer</option>
       </select>
 
-      {localQuestion?.kind !== "text" && (
+      {localQuestion?.kind !== 'text' && (
         <>
           <h4 className="font-semibold mb-2">Options</h4>
           {localQuestion?.options?.map((opt) => (
@@ -110,13 +104,13 @@ export default function PropertiesPanel() {
                   setLocalQuestion({
                     ...localQuestion!,
                     options: localQuestion.options?.map((o) =>
-                      o.id === opt.id ? { ...o, text: e.target.value } : o
+                      o.id === opt.id ? { ...o, text: e.target.value } : o,
                     ),
                   })
                 }
                 className="flex-1 border px-3 py-1 rounded"
               />
-              {localQuestion.kind === "single" ? (
+              {localQuestion.kind === 'single' ? (
                 <input
                   type="radio"
                   name="correct"
@@ -138,9 +132,7 @@ export default function PropertiesPanel() {
                       ...localQuestion!,
                       correctOptionIds: checked
                         ? [...(localQuestion.correctOptionIds || []), opt.id]
-                        : localQuestion.correctOptionIds?.filter(
-                            (id) => id !== opt.id
-                          ),
+                        : localQuestion.correctOptionIds?.filter((id) => id !== opt.id),
                     });
                   }}
                 />
@@ -150,7 +142,7 @@ export default function PropertiesPanel() {
                 onClick={() => handleDeleteOption(opt.id)}
                 className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
               >
-                ✕
+                <Delete />
               </button>
             </div>
           ))}
@@ -175,10 +167,10 @@ export default function PropertiesPanel() {
           </button>
         </>
       )}
-      {localQuestion?.kind == "text" && (
+      {localQuestion?.kind == 'text' && (
         <input
           type="text"
-          value={localQuestion.textAnswer ?? ""}
+          value={localQuestion.textAnswer ?? ''}
           onChange={(e) =>
             setLocalQuestion({
               ...localQuestion!,

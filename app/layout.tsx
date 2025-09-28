@@ -1,23 +1,22 @@
-import { Toaster } from "react-hot-toast";
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import Header from "./@components/Header";
+import { Toaster } from 'react-hot-toast';
+import type { Metadata } from 'next';
+import { Geist, Geist_Mono } from 'next/font/google';
+import './globals.css';
+import Header from './@components/Header';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: "Quizz app",
-  description:
-    "A Quizz builder application , you can create and publish quizess in no time",
+  title: 'Quizz app',
+  description: 'A Quizz builder application , you can create and publish quizess in no time',
 };
 
 export default function RootLayout({
@@ -36,21 +35,21 @@ export default function RootLayout({
           position="top-right"
           toastOptions={{
             style: {
-              background: "#333",
-              color: "#fff",
-              borderRadius: "8px",
-              padding: "10px",
+              background: '#333',
+              color: '#fff',
+              borderRadius: '8px',
+              padding: '10px',
             },
             success: {
               style: {
-                background: "#22c55e",
-                color: "#fff",
+                background: '#22c55e',
+                color: '#fff',
               },
             },
             error: {
               style: {
-                background: "#ef4444",
-                color: "#fff",
+                background: '#ef4444',
+                color: '#fff',
               },
             },
           }}

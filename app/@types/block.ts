@@ -1,6 +1,6 @@
-export type BlockType = "heading" | "question" | "button" | "footer";
+export type BlockType = 'heading' | 'question' | 'button' | 'footer';
 
-export type QuestionKind = "single" | "multi" | "text";
+export type QuestionKind = 'single' | 'multi' | 'text';
 
 export interface QuestionOption {
   id: string;
@@ -9,7 +9,7 @@ export interface QuestionOption {
 
 export interface QuestionPayload {
   id?: string;
-  kind: QuestionKind;
+  kind?: QuestionKind;
   text: string;
   textAnswer?: string;
   options?: QuestionOption[];

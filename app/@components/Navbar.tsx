@@ -1,16 +1,17 @@
-import React from "react";
-import Link from "next/link";
+import React from 'react';
+import Link from 'next/link';
+
 const NavLinks = [
-  { url: "/", title: "Home" },
-  { url: "/quiz/edit", title: "Create Quiz" },
+  { url: '/', title: 'Home' },
+  { url: '/quiz/edit', title: 'Create Quiz' },
 ];
 
 const Navbar = () => {
   return (
-    <nav className="flex space-x-6">
+    <nav className="flex space-x-8">
       {NavLinks.map((link) => (
         <Link
-          className="hover:text-blue-600 transition"
+          className="nav-link text-gray-700 hover:text-blue-600 font-medium transition"
           href={link.url}
           key={link.title}
         >
