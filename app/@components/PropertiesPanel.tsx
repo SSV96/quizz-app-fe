@@ -155,7 +155,10 @@ export default function PropertiesPanel() {
                 ...localQuestion!,
                 options: [
                   ...(localQuestion?.options || []),
-                  { id: crypto.randomUUID(), text: `Option ${optionCount + 1}` },
+                  {
+                    id: crypto.randomUUID(),
+                    text: `Option ${optionCount + 1}`,
+                  },
                 ],
               });
             }}
