@@ -46,7 +46,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   selectedBlockId: null,
 
   loadQuizzes: () => {
-    const storedQuizzes = LocalStorage.getQuizzes<Quiz>();
+    const storedQuizzes = LocalStorage.getQuizzes();
     set({ quizzes: storedQuizzes });
   },
 

@@ -7,6 +7,7 @@ import PropertiesPanel from "../../../@components/PropertiesPanel";
 import { useQuizStore } from "../../../@store/useCanvasStore";
 import { LocalStorage } from "../../../@utils/localstorage";
 import { useParams } from "next/navigation";
+import { BlockType } from "@/app/@types/block";
 
 export default function QuizEditor() {
   const params = useParams();
@@ -41,7 +42,7 @@ export default function QuizEditor() {
 
     
     if (source.droppableId === "SIDEBAR" && destination.droppableId === "CANVAS") {
-      addBlock(quizId, draggableId as any);
+      addBlock(quizId, draggableId as BlockType);
       return;
     }
 
@@ -81,7 +82,7 @@ export default function QuizEditor() {
       
         <div className="absolute bottom-6 right-6 flex gap-4">
           <button
-            onClick={() => useQuizStore.getState().saveQuiz(selectedQuiz.id)}
+            onClick={() => useQuizStore.getState().saveQuiz()}
             className="px-6 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700"
           >
             Save Quiz
