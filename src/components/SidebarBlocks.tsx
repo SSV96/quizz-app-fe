@@ -1,21 +1,19 @@
 'use client';
 import React from 'react';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
+import { BlockEnum } from '../types/block';
 
 const palette = [
-  { type: 'heading', label: 'Heading' },
-  { type: 'question', label: 'Question' },
-  { type: 'button', label: 'Button' },
-  { type: 'footer', label: 'Footer' },
+  { type: BlockEnum.HEADING, label: 'Heading' },
+  { type: BlockEnum.QUESTION, label: 'Question' },
+  { type: BlockEnum.BUTTON, label: 'Button' },
+  { type: BlockEnum.FOOTER, label: 'Footer' },
 ];
 
 export default function SidebarBlocks() {
   return (
-    <div
-      style={{ width: 240 }}
-      className="border-r p-4 bg-gray-50 dark:bg-gray-900 transition-colors"
-    >
-      <h3 className="font-bold mb-4 text-gray-700 dark:text-gray-200">Building blocks</h3>
+    <div style={{ width: 240 }} className="border-r p-4 bg-gray-50 transition-colors">
+      <h3 className="font-bold mb-4 text-gray-700">Building blocks</h3>
 
       <Droppable droppableId="SIDEBAR" isDropDisabled>
         {(provided) => (
@@ -29,13 +27,13 @@ export default function SidebarBlocks() {
                     {...prov.dragHandleProps}
                     className="
                       p-3 mb-3 rounded-lg 
-                      bg-white dark:bg-gray-800 
-                      border border-gray-200 dark:border-gray-700
+                      bg-white 
+                      border border-gray-200
                       cursor-grab active:cursor-grabbing
                       shadow-sm hover:shadow-md 
                       transition-all duration-200 ease-in-out
-                      hover:bg-gray-100 dark:hover:bg-gray-700
-                      text-gray-800 dark:text-gray-100
+                      hover:bg-gray-100
+                      text-gray-800
                       select-none
                     "
                   >

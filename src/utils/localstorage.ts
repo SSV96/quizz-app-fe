@@ -1,4 +1,4 @@
-import { Quiz } from '../@types/block';
+import { Quiz } from '../types/block';
 import { demoQuiz } from './demo-quiz';
 
 const STORAGE_KEY = 'quiz_app.quizzes';
@@ -24,7 +24,7 @@ export const LocalStorage = {
 
       return quizzes;
     } catch (error) {
-      console.error('❌ Failed to read quizzes:', error);
+      console.error('Failed to read quizzes:', error);
       return demoQuiz;
     }
   },

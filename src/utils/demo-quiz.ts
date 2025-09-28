@@ -1,25 +1,25 @@
 'use client';
-import { Quiz } from '../@types/block';
-
+import { BlockEnum, QuestionKindEnum, Quiz } from '../types/block';
+const today = new Date().toISOString();
 export const demoQuiz: Quiz[] = [
   {
     id: 'quiz-1',
-    title: 'React Basics Quiz',
+    title: '(Sample Quiz 1) React Basics Quiz',
     blocks: [
       {
         id: 'block-1',
-        type: 'heading',
+        type: BlockEnum.HEADING,
         properties: {
           text: 'Welcome to React Basics Quiz!',
         },
       },
       {
         id: 'block-2',
-        type: 'question',
+        type: BlockEnum.QUESTION,
         properties: {
           question: {
             id: 'q1',
-            kind: 'single',
+            kind: QuestionKindEnum.SINGLE,
             text: 'What is React?',
             options: [
               { id: 'o1', text: 'A JavaScript library' },
@@ -32,11 +32,11 @@ export const demoQuiz: Quiz[] = [
       },
       {
         id: 'block-3',
-        type: 'question',
+        type: BlockEnum.QUESTION,
         properties: {
           question: {
             id: 'q2',
-            kind: 'multi',
+            kind: QuestionKindEnum.MULTI,
             text: 'Which features belong to React?',
             options: [
               { id: 'o1', text: 'Virtual DOM' },
@@ -49,46 +49,46 @@ export const demoQuiz: Quiz[] = [
       },
       {
         id: 'block-5',
-        type: 'footer',
+        type: BlockEnum.FOOTER,
         properties: {
           text: 'Good luck',
         },
       },
     ],
     published: true,
-    createdAt: '2025-09-01T10:00:00.000Z',
-    updatedAt: '2025-09-05T14:30:00.000Z',
-    publishedAt: '2025-09-06T09:00:00.000Z',
+    createdAt: today,
+    updatedAt: today,
+    publishedAt: today,
   },
   {
     id: 'quiz-2',
-    title: 'JavaScript Fundamentals',
+    title: '(Sample Quiz 2) JavaScript Fundamentals',
     blocks: [
       {
         id: 'block-1',
-        type: 'heading',
+        type: BlockEnum.HEADING,
         properties: {
           text: 'JavaScript Quiz',
         },
       },
       {
         id: 'block-2',
-        type: 'question',
+        type: BlockEnum.QUESTION,
         properties: {
           question: {
             id: 'q1',
-            kind: 'text',
+            kind: QuestionKindEnum.TEXT,
             text: 'Explain closures in JavaScript.',
           },
         },
       },
       {
         id: 'block-3',
-        type: 'question',
+        type: BlockEnum.QUESTION,
         properties: {
           question: {
             id: 'q2',
-            kind: 'single',
+            kind: QuestionKindEnum.SINGLE,
             text: 'Which of the following is NOT a JavaScript data type?',
             options: [
               { id: 'o1', text: 'String' },
@@ -101,8 +101,8 @@ export const demoQuiz: Quiz[] = [
       },
     ],
     published: false,
-    createdAt: '2025-09-02T12:00:00.000Z',
-    updatedAt: '2025-09-08T16:00:00.000Z',
+    createdAt: today,
+    updatedAt: today,
     publishedAt: null,
   },
 ];

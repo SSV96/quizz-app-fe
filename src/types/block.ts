@@ -1,6 +1,15 @@
-export type BlockType = 'heading' | 'question' | 'button' | 'footer';
+export enum BlockEnum {
+  HEADING = 'heading',
+  QUESTION = 'question',
+  BUTTON = 'button',
+  FOOTER = 'footer',
+}
 
-export type QuestionKind = 'single' | 'multi' | 'text';
+export enum QuestionKindEnum {
+  SINGLE = 'single',
+  MULTI = 'multi',
+  TEXT = 'text',
+}
 
 export interface QuestionOption {
   id: string;
@@ -9,7 +18,7 @@ export interface QuestionOption {
 
 export interface QuestionPayload {
   id?: string;
-  kind?: QuestionKind;
+  kind?: QuestionKindEnum;
   text: string;
   textAnswer?: string;
   options?: QuestionOption[];
@@ -18,7 +27,7 @@ export interface QuestionPayload {
 
 export interface Block {
   id: string;
-  type: BlockType;
+  type: BlockEnum;
   properties: {
     text?: string;
     question?: QuestionPayload;
