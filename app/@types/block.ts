@@ -21,7 +21,6 @@ export interface Block {
   type: BlockType;
   properties: {
     text?: string;
-
     question?: QuestionPayload;
     style?: Record<string, string | number>;
     options?: QuestionOption[];

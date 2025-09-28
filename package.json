@@ -21,9 +21,7 @@
     "@hello-pangea/dnd": "^18.0.1",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
-    "@tanstack/react-query": "^5.86.0",
     "next": "15.5.2",
-    "prettier": "^3.6.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hot-toast": "^2.6.0",
@@ -41,6 +39,7 @@
     "eslint-config-next": "15.5.2",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -62,14 +62,9 @@ export default function QuizPreview() {
   const handleSubmit = () => {
     let correct = 0;
     blocks.forEach((block) => {
-      console.log(block);
-      console.log({ answers });
       const userAnswer = answers[block.id];
       const correctIds = block.properties.question?.correctOptionIds || [];
-      console.log({
-        userAnswer,
-        correctIds,
-      });
+
       if (block.properties.question?.kind === "text") {
         const correctText = block.properties.question?.textAnswer
           ?.trim()
@@ -81,10 +76,6 @@ export default function QuizPreview() {
           correct++;
         }
       } else if (Array.isArray(userAnswer)) {
-        console.log("CHECKING");
-        const checkingLength = userAnswer.length === correctIds.length;
-        const every = userAnswer.every((id) => correctIds.includes(id));
-        console.log({ checkingLength, every });
         if (
           userAnswer.length === correctIds.length &&
           userAnswer.every((id) => correctIds.includes(id))
@@ -97,7 +88,7 @@ export default function QuizPreview() {
         }
       }
     });
-    console.log({ correct });
+
     setScore(correct);
     setIsSubmitted(true);
   };

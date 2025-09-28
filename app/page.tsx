@@ -7,7 +7,6 @@ export default function HomePage() {
   const quizzes = useQuizStore((s) => s.quizzes);
   const loadQuizzes = useQuizStore((s) => s.loadQuizzes);
   const deleteQuiz = useQuizStore((s) => s.deleteQuiz);
-
   useEffect(() => {
     loadQuizzes();
   }, [loadQuizzes]);
