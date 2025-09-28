@@ -1,6 +1,6 @@
-export type BlockType = "heading" | "question" | "button" | "footer";
+export type BlockType = 'heading' | 'question' | 'button' | 'footer';
 
-export type QuestionKind = "single" | "multi" | "text";
+export type QuestionKind = 'single' | 'multi' | 'text';
 
 export interface QuestionOption {
   id: string;
@@ -8,10 +8,10 @@ export interface QuestionOption {
 }
 
 export interface QuestionPayload {
-  id?: string; 
-  kind: QuestionKind;
+  id?: string;
+  kind?: QuestionKind;
   text: string;
-  textAnswer?:string;
+  textAnswer?: string;
   options?: QuestionOption[];
   correctOptionIds?: string[];
 }
@@ -20,14 +20,10 @@ export interface Block {
   id: string;
   type: BlockType;
   properties: {
-  
-    
     text?: string;
-   
     question?: QuestionPayload;
-   style?: Record<string, string | number>;
-    options?: QuestionOption[]; 
-   
+    style?: Record<string, string | number>;
+    options?: QuestionOption[];
   };
 }
 

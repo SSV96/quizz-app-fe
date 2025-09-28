@@ -1,8 +1,8 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useQuizStore } from "../../@store/useCanvasStore";
-import { useQuizAnswerStore } from "../../@store/useCanvasStore";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { useQuizStore } from '../../@store/useCanvasStore';
+import { useQuizAnswerStore } from '../../@store/useCanvasStore';
 
 export default function QuizPreview() {
   const params = useParams();
@@ -19,7 +19,7 @@ export default function QuizPreview() {
 
   useEffect(() => {
     if (quizzes.length === 0) {
-      loadQuizzes?.();
+      loadQuizzes();
     }
     resetAnswers();
   }, [quizzes.length, loadQuizzes, resetAnswers]);
@@ -29,11 +29,8 @@ export default function QuizPreview() {
   if (!quiz) {
     return (
       <div className="p-8 text-center text-red-500">
-        Quiz not found!{" "}
-        <button
-          onClick={() => router.push("/")}
-          className="underline text-blue-600"
-        >
+        Quiz not found!{' '}
+        <button onClick={() => router.push('/')} className="underline text-blue-600">
           Go back home
         </button>
       </div>
@@ -56,52 +53,33 @@ export default function QuizPreview() {
     );
   }
 
-  const blocks = quiz.blocks.filter((b) => b.type === "question");
+  const blocks = quiz.blocks.filter((b) => b.type === 'question');
   const currentBlock = blocks[currentIndex];
 
   const handleSubmit = () => {
     let correct = 0;
     blocks.forEach((block) => {
-      console.log(block)
-    console.log({answers})
       const userAnswer = answers[block.id];
       const correctIds = block.properties.question?.correctOptionIds || [];
-console.log({
-  userAnswer,
-  correctIds
-})
-      if (block.properties.question?.kind === "text") {
-        const correctText =
-          block.properties.question?.textAnswer?.trim().toLowerCase();
-        if (
-          typeof userAnswer === "string" &&
-          userAnswer.trim().toLowerCase() === correctText
-        ) {
+
+      if (block.properties.question?.kind === 'text') {
+        const correctText = block.properties.question?.textAnswer?.trim().toLowerCase();
+        if (typeof userAnswer === 'string' && userAnswer.trim().toLowerCase() === correctText) {
           correct++;
         }
       } else if (Array.isArray(userAnswer)) {
-        console.log("CHECKING")
-        const checkingLength = userAnswer.length === correctIds.length;
-        const every = userAnswer.every((id) => correctIds.includes(id));
-        console.log({checkingLength,
-          every
-        })
         if (
           userAnswer.length === correctIds.length &&
           userAnswer.every((id) => correctIds.includes(id))
         ) {
           correct++;
         }
-      }
-      else if (block.properties.question?.kind === "single"){
-        if (
-         userAnswer === correctIds[0]
-        ) {
+      } else if (block.properties.question?.kind === 'single') {
+        if (userAnswer === correctIds[0]) {
           correct++;
         }
       }
     });
-console.log({correct})
     setScore(correct);
     setIsSubmitted(true);
   };
@@ -130,29 +108,22 @@ console.log({correct})
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">{quiz.title || "Untitled Quiz"}</h1>
+      <h1 className="text-3xl font-bold mb-6">{quiz.title || 'Untitled Quiz'}</h1>
 
       {currentBlock ? (
         <div className="space-y-6">
           <div className="p-4 border rounded shadow-sm bg-gray-50">
             <p className="font-medium mb-4">
-              Q{currentIndex + 1}.{" "}
-              {currentBlock.properties.question?.text || "Untitled Question"}
+              Q{currentIndex + 1}. {currentBlock.properties.question?.text || 'Untitled Question'}
             </p>
 
-            {/* MCQ Options */}
-            {currentBlock.properties.question?.kind !== "text" ? (
+            {currentBlock.properties.question?.kind !== 'text' ? (
               <div className="space-y-2">
                 {currentBlock.properties.question?.options?.map((opt) => (
-                  <label
-                    key={opt.id}
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
+                  <label key={opt.id} className="flex items-center gap-2 cursor-pointer">
                     <input
                       type={
-                        currentBlock.properties.question?.kind === "multi"
-                          ? "checkbox"
-                          : "radio"
+                        currentBlock.properties.question?.kind === 'multi' ? 'checkbox' : 'radio'
                       }
                       name={currentBlock.id}
                       value={opt.id}
@@ -162,15 +133,14 @@ console.log({correct})
                           : answers[currentBlock.id] === opt.id
                       }
                       onChange={(e) => {
-                        if (currentBlock.properties.question?.kind === "multi") {
-                          const prev =
-                            (answers[currentBlock.id] as string[]) || [];
+                        if (currentBlock.properties.question?.kind === 'multi') {
+                          const prev = (answers[currentBlock.id] as string[]) || [];
                           if (e.target.checked) {
                             setAnswer(currentBlock.id, [...prev, opt.id]);
                           } else {
                             setAnswer(
                               currentBlock.id,
-                              prev.filter((id) => id !== opt.id)
+                              prev.filter((id) => id !== opt.id),
                             );
                           }
                         } else {
@@ -178,7 +148,7 @@ console.log({correct})
                         }
                       }}
                     />
-                    <span>{opt.text || "Untitled Option"}</span>
+                    <span>{opt.text || 'Untitled Option'}</span>
                   </label>
                 ))}
               </div>
@@ -186,14 +156,13 @@ console.log({correct})
               <input
                 type="text"
                 placeholder="Enter your answer"
-                value={(answers[currentBlock.id] as string) || ""}
+                value={(answers[currentBlock.id] as string) || ''}
                 onChange={(e) => setAnswer(currentBlock.id, e.target.value)}
                 className="border px-3 py-2 rounded w-full"
               />
             )}
           </div>
 
-          {/* Navigation Buttons */}
           <div className="flex justify-between mt-6">
             <button
               disabled={currentIndex === 0}
@@ -204,10 +173,7 @@ console.log({correct})
             </button>
 
             {currentIndex === blocks.length - 1 ? (
-              <button
-                onClick={handleSubmit}
-                className="px-4 py-2 bg-green-600 text-white rounded"
-              >
+              <button onClick={handleSubmit} className="px-4 py-2 bg-green-600 text-white rounded">
                 Submit Quiz
               </button>
             ) : (
