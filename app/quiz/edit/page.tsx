@@ -1,7 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuizStore } from '../../@store/useCanvasStore';
 import {
   Button,
   Dialog,
@@ -12,6 +11,7 @@ import {
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import AddIcon from '@mui/icons-material/Add';
+import { useQuizStore } from '@/src/store/useCanvasStore';
 
 export default function QuizEditorPage() {
   const router = useRouter();
@@ -34,9 +34,7 @@ export default function QuizEditorPage() {
       transition={{ duration: 0.4 }}
       className="p-6"
     >
-      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">
-        Create a New Quiz
-      </h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-900">Create a New Quiz</h1>
 
       <Button
         variant="contained"
