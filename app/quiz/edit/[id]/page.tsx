@@ -1,13 +1,15 @@
-"use client";
-import React, { useEffect } from "react";
-import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import SidebarBlocks from "../../../@components/SidebarBlocks";
-import Canvas from "../../../@components/Canvas";
-import PropertiesPanel from "../../../@components/PropertiesPanel";
-import { useQuizStore } from "../../../@store/useCanvasStore";
-import { LocalStorage } from "../../../@utils/localstorage";
-import { useParams } from "next/navigation";
-import { BlockType } from "@/app/@types/block";
+'use client';
+import React, { useEffect } from 'react';
+import { DragDropContext, DropResult } from '@hello-pangea/dnd';
+import SidebarBlocks from '../../../@components/SidebarBlocks';
+import Canvas from '../../../@components/Canvas';
+import PropertiesPanel from '../../../@components/PropertiesPanel';
+import { useQuizStore } from '../../../@store/useCanvasStore';
+import { LocalStorage } from '../../../@utils/localstorage';
+import { useParams } from 'next/navigation';
+import { BlockType } from '@/app/@types/block';
+import { Button, Zoom, FormControlLabel, Switch } from '@mui/material';
+import SaveIcon from '@mui/icons-material/Save';
 
 export default function QuizEditor() {
   const params = useParams();
@@ -18,20 +20,17 @@ export default function QuizEditor() {
 
   const addBlock = useQuizStore((s) => s.addBlock);
   const setSelectedQuiz = useQuizStore((s) => s.setSelectedQuiz);
-  const publishQuiz = useQuizStore((s) => s.publishQuiz);
+  const togglePublishQuiz = useQuizStore((s) => s.togglePublishQuiz);
 
-  
   useEffect(() => {
     if (quizId) {
       setSelectedQuiz(quizId);
     }
   }, [quizId, setSelectedQuiz]);
 
-
   if (!selectedQuiz) {
     return <div className="p-6 text-red-500">Quiz not found!</div>;
   }
-
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
@@ -40,26 +39,22 @@ export default function QuizEditor() {
     const quizId = useQuizStore.getState().selectedQuizId;
     if (!quizId) return;
 
-    
-    if (source.droppableId === "SIDEBAR" && destination.droppableId === "CANVAS") {
+    if (source.droppableId === 'SIDEBAR' && destination.droppableId === 'CANVAS') {
       addBlock(quizId, draggableId as BlockType);
       return;
     }
 
-  
-    if (source.droppableId === "CANVAS" && destination.droppableId === "CANVAS") {
+    if (source.droppableId === 'CANVAS' && destination.droppableId === 'CANVAS') {
       const quizzes = useQuizStore.getState().quizzes;
       const quiz = quizzes.find((q) => q.id === quizId);
       if (!quiz) return;
-
 
       const reordered = Array.from(quiz.blocks);
       const [moved] = reordered.splice(source.index, 1);
       reordered.splice(destination.index, 0, moved);
 
-      
       const updatedQuizzes = quizzes.map((q) =>
-        q.id === quizId ? { ...q, blocks: reordered } : q
+        q.id === quizId ? { ...q, blocks: reordered } : q,
       );
 
       LocalStorage.saveQuizzes(updatedQuizzes);
@@ -69,33 +64,37 @@ export default function QuizEditor() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex h-screen">
-      
+      <div className="flex h-screen ">
         <SidebarBlocks />
-
-       
         <Canvas />
-
-      
         <PropertiesPanel />
 
-      
-        <div className="absolute bottom-6 right-6 flex gap-4">
-          <button
-            onClick={() => useQuizStore.getState().saveQuiz()}
-            className="px-6 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700"
-          >
-            Save Quiz
-          </button>
+        <div className="absolute bottom-6 right-6 flex flex-col gap-3 items-end">
+          <Zoom in>
+            <Button
+              variant="contained"
+              color="success"
+              startIcon={<SaveIcon />}
+              onClick={() => useQuizStore.getState().saveQuiz()}
+              className="!rounded-xl !px-6 !py-3 shadow-lg"
+            >
+              Save Quiz
+            </Button>
+          </Zoom>
 
-          <button
-            onClick={() => publishQuiz(selectedQuiz.id)}
-            className="px-6 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700"
-          >
-            Publish Quiz
-          </button>
+          <Zoom in>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={selectedQuiz.published}
+                  onChange={() => togglePublishQuiz(selectedQuiz.id)}
+                  color="primary"
+                />
+              }
+              label={selectedQuiz.published ? 'Published' : 'Draft'}
+            />
+          </Zoom>
         </div>
-
       </div>
     </DragDropContext>
   );
