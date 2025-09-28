@@ -20,13 +20,14 @@ export interface Block {
   id: string;
   type: BlockType;
   properties: {
-    options: any;
+  
     
     text?: string;
    
     question?: QuestionPayload;
+   style?: Record<string, string | number>;
+    options?: QuestionOption[]; 
    
-    style?: Record<string, any>;
   };
 }
 
