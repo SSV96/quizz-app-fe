@@ -58,7 +58,7 @@ export default function QuizEditor() {
       reordered.splice(destination.index, 0, moved);
 
       const updatedQuizzes = quizzes.map((q) =>
-        q.id === quizId ? { ...q, blocks: reordered } : q,
+        q.id === quizId ? { ...q, blocks: reordered } : q
       );
 
       LocalStorage.saveQuizzes(updatedQuizzes);

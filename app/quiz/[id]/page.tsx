@@ -170,7 +170,7 @@ export default function QuizPreview() {
                           } else {
                             setAnswer(
                               currentBlock.id,
-                              prev.filter((id) => id !== opt.id),
+                              prev.filter((id) => id !== opt.id)
                             );
                           }
                         } else {

@@ -14,7 +14,7 @@ export default function PropertiesPanel() {
   const block = quiz?.blocks.find((b) => b.id === selectedBlockId);
 
   const [localQuestion, setLocalQuestion] = useState(
-    block?.properties.question,
+    block?.properties.question
   );
 
   useEffect(() => {
@@ -110,7 +110,7 @@ export default function PropertiesPanel() {
                   setLocalQuestion({
                     ...localQuestion!,
                     options: localQuestion.options?.map((o) =>
-                      o.id === opt.id ? { ...o, text: e.target.value } : o,
+                      o.id === opt.id ? { ...o, text: e.target.value } : o
                     ),
                   })
                 }
@@ -139,7 +139,7 @@ export default function PropertiesPanel() {
                       correctOptionIds: checked
                         ? [...(localQuestion.correctOptionIds || []), opt.id]
                         : localQuestion.correctOptionIds?.filter(
-                            (id) => id !== opt.id,
+                            (id) => id !== opt.id
                           ),
                     });
                   }}
