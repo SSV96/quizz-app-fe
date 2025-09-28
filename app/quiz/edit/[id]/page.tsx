@@ -1,15 +1,13 @@
 'use client';
 import React, { useEffect } from 'react';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import SidebarBlocks from '../../../@components/SidebarBlocks';
-import Canvas from '../../../@components/Canvas';
-import PropertiesPanel from '../../../@components/PropertiesPanel';
-import { useQuizStore } from '../../../@store/useCanvasStore';
-import { LocalStorage } from '../../../@utils/localstorage';
 import { useParams } from 'next/navigation';
-import { BlockType } from '@/app/@types/block';
-import { Button, Zoom, FormControlLabel, Switch } from '@mui/material';
-import SaveIcon from '@mui/icons-material/Save';
+import { useQuizStore } from '@/src/store/useCanvasStore';
+import SidebarBlocks from '@/src/components/SidebarBlocks';
+import Canvas from '@/src/components/Canvas';
+import PropertiesPanel from '@/src/components/PropertiesPanel';
+import { BlockEnum } from '@/src/types/block';
+import { LocalStorage } from '@/src/utils/localstorage';
 
 export default function QuizEditor() {
   const params = useParams();
@@ -20,7 +18,6 @@ export default function QuizEditor() {
 
   const addBlock = useQuizStore((s) => s.addBlock);
   const setSelectedQuiz = useQuizStore((s) => s.setSelectedQuiz);
-  const togglePublishQuiz = useQuizStore((s) => s.togglePublishQuiz);
 
   useEffect(() => {
     if (quizId) {
@@ -40,7 +37,7 @@ export default function QuizEditor() {
     if (!quizId) return;
 
     if (source.droppableId === 'SIDEBAR' && destination.droppableId === 'CANVAS') {
-      addBlock(quizId, draggableId as BlockType);
+      addBlock(quizId, draggableId as BlockEnum);
       return;
     }
 
@@ -64,37 +61,10 @@ export default function QuizEditor() {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex h-screen ">
+      <div className="flex h-screen bg-gray-550">
         <SidebarBlocks />
         <Canvas />
         <PropertiesPanel />
-
-        <div className="absolute bottom-6 right-6 flex flex-col gap-3 items-end">
-          <Zoom in>
-            <Button
-              variant="contained"
-              color="success"
-              startIcon={<SaveIcon />}
-              onClick={() => useQuizStore.getState().saveQuiz()}
-              className="!rounded-xl !px-6 !py-3 shadow-lg"
-            >
-              Save Quiz
-            </Button>
-          </Zoom>
-
-          <Zoom in>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={selectedQuiz.published}
-                  onChange={() => togglePublishQuiz(selectedQuiz.id)}
-                  color="primary"
-                />
-              }
-              label={selectedQuiz.published ? 'Published' : 'Draft'}
-            />
-          </Zoom>
-        </div>
       </div>
     </DragDropContext>
   );

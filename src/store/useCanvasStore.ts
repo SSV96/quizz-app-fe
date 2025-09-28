@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { nanoid } from 'nanoid';
-import { LocalStorage } from '../@utils/localstorage';
+import { LocalStorage } from '../utils/localstorage';
 import toast from 'react-hot-toast';
-import { Block, Quiz } from '../@types/block';
+import { Block, BlockEnum, Quiz, QuestionKindEnum } from '../types/block';
 
 interface QuizStore {
   quizzes: Quiz[];
@@ -72,14 +72,14 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   addBlock: (quizId, type) =>
     set((state) => {
       const newBlock: Block =
-        type === 'question'
+        type === BlockEnum.QUESTION
           ? {
               id: nanoid(),
               type,
               properties: {
                 question: {
                   id: nanoid(),
-                  kind: 'single',
+                  kind: QuestionKindEnum.SINGLE,
                   text: 'New Question',
                   options: [
                     { id: nanoid(), text: 'Option 1' },
