@@ -7,6 +7,7 @@ interface IProps {
   selectedQuestion: QuestionBlock;
   onTextAnswerChange: ChangeEventHandler<HTMLInputElement>;
 }
+
 export const TextAnswerEditor: FC<IProps> = ({ selectedQuestion, onTextAnswerChange }) => {
   return (
     <TextField

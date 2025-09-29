@@ -1,12 +1,12 @@
 'use client';
 import React from 'react';
-import { QuestionKindEnum, QuestionBlock } from '@/src/types';
+import { QuestionKindEnum, IQuestionBlock } from '@/src/types';
 import { TextQuestion } from './TextQuestion';
 import { ChoiceQuestion } from './ChoiceQuestion';
 import { useQuizAnswerStore } from '../store/useAnswerStore';
 
 interface QuestionBlockProps {
-  block: QuestionBlock;
+  block: IQuestionBlock;
   index: number;
 }
 

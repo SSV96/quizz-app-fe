@@ -1,22 +1,30 @@
 import { Draggable } from '@hello-pangea/dnd';
-import React, { FC } from 'react';
+import { FC } from 'react';
 import BlockRenderer from '../BlockRenderer';
 import { TQuizBlock } from '../../types';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useQuizStore } from '../../store/useQuizStore';
-import cx from 'classnames';
+import cn from 'classnames';
 
 interface DraggableItemProps {
   block: TQuizBlock;
-  quizId: string;
   index: number;
 }
 
-const DraggableItem: FC<DraggableItemProps> = ({ block, quizId, index }) => {
+const DraggableItem: FC<DraggableItemProps> = ({ block, index }) => {
   const selectedBlockId = useQuizStore((s) => s.selectedBlockId);
-  const selectBlock = useQuizStore((s) => s.selectBlock);
+  const selectBlock = useQuizStore((s) => s.setSelectedBlock);
   const updateBlock = useQuizStore((s) => s.updateBlock);
   const deleteBlock = useQuizStore((s) => s.deleteBlock);
+
+  const handleDeleteBlock = (e: React.MouseEvent<SVGSVGElement, MouseEvent>): void => {
+    e.stopPropagation();
+    deleteBlock(block.id);
+  };
+
+  if (block.isDeleted) {
+    return;
+  }
 
   return (
     <Draggable draggableId={block.id} index={index}>
@@ -25,7 +33,7 @@ const DraggableItem: FC<DraggableItemProps> = ({ block, quizId, index }) => {
           ref={prov.innerRef}
           {...prov.draggableProps}
           {...prov.dragHandleProps}
-          className={cx(
+          className={cn(
             'p-4 mb-4 rounded-lg border shadow-sm bg-white cursor-pointer flex justify-between items-center',
             'transition-all duration-200 ease-in-out hover:shadow-md hover:scale-[1.01]',
             {
@@ -40,10 +48,7 @@ const DraggableItem: FC<DraggableItemProps> = ({ block, quizId, index }) => {
           </div>
 
           <DeleteIcon
-            onClick={(e) => {
-              e.stopPropagation();
-              deleteBlock(quizId, block.id);
-            }}
+            onClick={handleDeleteBlock}
             className="ml-3 text-red-500 cursor-pointer hover:text-red-700 active:scale-95 transition"
           />
         </div>

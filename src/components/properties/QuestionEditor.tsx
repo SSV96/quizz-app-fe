@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useEffect, useState, ChangeEvent } from 'react';
+import React, { FC, ChangeEvent } from 'react';
 import { QuestionBlock, QuestionKindEnum } from '../../types';
 import { useQuizStore } from '../../store/useQuizStore';
 import { TextAnswerEditor } from './TextAnswerEditor';
@@ -26,10 +26,6 @@ export const QuestionEditor: FC<QuestionEditorProps> = ({ block }) => {
   };
 
   const handleTextAnswerChange = (e: ChangeEvent<HTMLInputElement>) => {
-    updateBlock(id, { ...properties, textAnswer: e.target.value });
-  };
-
-  const handleOptionAnswerChange = (e: ChangeEvent<HTMLInputElement>) => {
     updateBlock(id, { ...properties, textAnswer: e.target.value });
   };
 

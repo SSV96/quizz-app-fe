@@ -1,7 +1,7 @@
 import React from 'react';
 import { TQuizBlock, BlockEnum } from '../types';
 import { TextField, Button } from '@mui/material';
-import toast from 'react-hot-toast';
+
 interface BlockRendererProps {
   block: TQuizBlock;
   updateBlock: (id: string, properties: Partial<TQuizBlock['properties']>) => void;
@@ -14,7 +14,6 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => 
         text: e.target.value,
       });
     } else if (block.type === BlockEnum.QUESTION) {
-      toast.success('iam updatung');
       updateBlock(block.id, {
         ...block.properties,
         title: e.target.value,
@@ -28,7 +27,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => 
         fullWidth
         variant="outlined"
         size="small"
-        value={block.properties.text || ''}
+        value={block.properties.text ?? ''}
         onChange={handleChange}
         label={block.type === BlockEnum.HEADING ? 'Heading' : 'Footer'}
       />
@@ -41,7 +40,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => 
         fullWidth
         variant="outlined"
         size="small"
-        value={block.properties.title || ''}
+        value={block.properties.title ?? ''}
         onChange={handleChange}
         label="Question"
       />

@@ -1,8 +1,9 @@
 'use client';
 import React, { FC } from 'react';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
-import { BlockEnum, DroppableAreaEnum, Quiz } from '../../types';
+import { BlockEnum, DroppableAreaEnum } from '../../types';
 import cn from 'classnames';
+import { useQuizStore } from '@/src/store/useQuizStore';
 
 const palette = [
   { type: BlockEnum.HEADING, label: 'Heading' },
@@ -11,17 +12,14 @@ const palette = [
   { type: BlockEnum.FOOTER, label: 'Footer' },
 ];
 
-interface ISidebarBlocksProps {
-  selectedQuiz: Quiz;
-}
-
-export const SidebarBlocks: FC<ISidebarBlocksProps> = ({ selectedQuiz }) => {
-  const { blocks } = selectedQuiz;
+export const SidebarBlocks: FC = () => {
+  const selectedQuiz = useQuizStore((s) => s.selectedQuiz);
+  const { blocks = [] } = selectedQuiz ?? {};
 
   const checkIsBlockDisabled = (blockType: BlockEnum) => {
     if (blockType === BlockEnum.QUESTION) return false;
 
-    return blocks.some(({ type }) => type === blockType);
+    return blocks?.some(({ type, isDeleted }) => type === blockType && !isDeleted);
   };
 
   return (

@@ -1,33 +1,29 @@
-import React, { useState } from 'react';
 import { SavePublishPanel } from './SavePublishPanel';
 import { TextField } from '@mui/material';
 import { useQuizStore } from '../store/useQuizStore';
+import { FC } from 'react';
 
-const QuizEditorHeader = () => {
-  const quiz = useQuizStore((s) => s.quizzes.find((q) => q.id === s.selectedQuizId));
-  const [title, setTitle] = useState(quiz?.title || '');
+const QuizEditorHeader: FC = () => {
+  const selectedQuiz = useQuizStore().selectedQuiz;
+
+  const setSelectedQuiz = useQuizStore((s) => s.setSelectedQuiz);
 
   const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
-
-    const updatedQuizzes = useQuizStore
-      .getState()
-      .quizzes.map((q) =>
-        q.id === quiz?.id ? { ...q, title: newTitle, updatedAt: new Date().toISOString() } : q,
-      );
-
-    useQuizStore.setState({ quizzes: updatedQuizzes });
+    setSelectedQuiz({
+      title: newTitle,
+    });
   };
+
   return (
     <nav className="flex flex-row w-full">
       <TextField
         label="Quiz Title"
         variant="outlined"
-        value={title}
+        value={selectedQuiz?.title || ''}
         onChange={(e) => handleTitleChange(e.target.value)}
         sx={{ width: 256 }}
       />
-      <SavePublishPanel quiz={quiz} />
+      <SavePublishPanel quiz={selectedQuiz || {}} />
     </nav>
   );
 };

@@ -5,6 +5,7 @@ import React, { FC } from 'react';
 interface ITextBlockEditorProps {
   block: TextBlock;
 }
+
 export const TextBlockEditor: FC<ITextBlockEditorProps> = ({ block }) => {
   return (
     <>
