@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, FC } from 'react';
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { useQuizStore } from '../store/useCanvasStore';
-import { Quiz } from '../types/block';
+import { useQuizStore } from '../../store/useQuizStore';
+import { Quiz } from '../../types';
 import QuizTableRow from './QuizTableRow';
 
 interface QuizTableProps {

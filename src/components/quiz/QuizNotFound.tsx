@@ -1,14 +1,22 @@
+import { Home } from '@mui/icons-material';
+import { Button } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
 
 const QuizNotFound: FC = () => {
   const router = useRouter();
+
   return (
     <div className="p-8 text-center text-red-500">
-      Quiz not found!{' '}
-      <button onClick={() => router.push('/')} className="underline text-blue-600">
+      Quiz not found!
+      <Button
+        onClick={() => router.push('/')}
+        variant="contained"
+        className="underline"
+        endIcon={<Home />}
+      >
         Go back home
-      </button>
+      </Button>
     </div>
   );
 };
