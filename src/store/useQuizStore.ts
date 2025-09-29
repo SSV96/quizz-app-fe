@@ -131,7 +131,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   saveQuiz: () => {
     const quizzes = get().quizzes;
     LocalStorage.saveQuizzes(quizzes);
-    toast.success(' Quiz saved successfully');
+    // toast.success(' Quiz saved successfully');
   },
 
   publishQuiz: (quizId) =>

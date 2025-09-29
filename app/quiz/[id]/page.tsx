@@ -46,16 +46,18 @@ export default function QuizPreview() {
       const correctIds = q?.correctOptionIds || [];
 
       if (q?.kind === QuestionKindEnum.TEXT) {
-        const correctText = q.textAnswer?.trim().toLowerCase();
-        if (typeof userAnswer === 'string' && userAnswer.trim().toLowerCase() === correctText) {
-          correct++;
-        }
-      } else if (Array.isArray(userAnswer)) {
-        if (
-          userAnswer.length === correctIds.length &&
-          userAnswer.every((id) => correctIds.includes(id))
-        ) {
-          correct++;
+        if (q?.kind === QuestionKindEnum.TEXT) {
+          const correctText = q.textAnswer?.trim().toLowerCase();
+          if (typeof userAnswer === 'string' && userAnswer.trim().toLowerCase() === correctText) {
+            correct++;
+          }
+        } else if (Array.isArray(userAnswer)) {
+          if (
+            userAnswer.length === correctIds.length &&
+            userAnswer.every((id) => correctIds.includes(id))
+          ) {
+            correct++;
+          }
         }
       } else if (q?.kind === QuestionKindEnum.SINGLE) {
         if (userAnswer === correctIds[0]) correct++;
