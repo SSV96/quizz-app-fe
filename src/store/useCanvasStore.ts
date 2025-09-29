@@ -30,6 +30,7 @@ interface AnswerState {
 
 export const useQuizAnswerStore = create<AnswerState>((set) => ({
   answers: {},
+
   setAnswer: (blockId, value) =>
     set((state) => ({
       answers: {
@@ -37,6 +38,7 @@ export const useQuizAnswerStore = create<AnswerState>((set) => ({
         [blockId]: value,
       },
     })),
+
   resetAnswers: () => set({ answers: {} }),
 }));
 
@@ -47,7 +49,6 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
 
   loadQuizzes: () => {
     const storedQuizzes = LocalStorage.getQuizzes();
-
     set({ quizzes: storedQuizzes });
   },
 
@@ -162,6 +163,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       toast.success('Quiz published successfully');
       return { quizzes: updatedQuizzes };
     }),
+
   togglePublishQuiz: (quizId) => {
     const updatedQuizzes = get().quizzes.map((q) =>
       q.id === quizId ? { ...q, published: !q.published } : q,
@@ -169,6 +171,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
     set({ quizzes: updatedQuizzes });
     LocalStorage.saveQuizzes(updatedQuizzes);
   },
+
   deleteQuiz: (quizId) =>
     set((state) => {
       const updatedQuizzes = state.quizzes.filter((quiz) => quiz.id !== quizId);

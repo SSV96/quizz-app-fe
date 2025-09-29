@@ -5,9 +5,9 @@ import { useParams } from 'next/navigation';
 import { useQuizStore } from '@/src/store/useCanvasStore';
 import SidebarBlocks from '@/src/components/SidebarBlocks';
 import Canvas from '@/src/components/Canvas';
-import PropertiesPanel from '@/src/components/PropertiesPanel';
 import { BlockEnum } from '@/src/types/block';
 import { LocalStorage } from '@/src/utils/localstorage';
+import { PropertiesPanel } from '@/src/components/properties/PropertiesPanel';
 
 export default function QuizEditor() {
   const params = useParams();
