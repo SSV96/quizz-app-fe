@@ -1,13 +1,10 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-import QuizEditHeader from '@/src/components/quiz/QuizEditHeader';
 
 export default function QuizLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col h-screen bg-gray-50">
-      <QuizEditHeader />
-
       <motion.main
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}

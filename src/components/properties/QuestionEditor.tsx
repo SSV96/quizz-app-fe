@@ -25,7 +25,7 @@ export const QuestionEditor = ({ block }: { block: Block }) => {
     }
   }, [localQuestion, block?.id, block?.type, updateBlock]);
 
-  if (!localQuestion) return null;
+  if (!localQuestion) return;
 
   const localQuestionKind = localQuestion.kind ?? QuestionKindEnum.SINGLE;
 

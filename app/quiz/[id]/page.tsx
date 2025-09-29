@@ -3,11 +3,11 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { BlockEnum, QuestionKindEnum } from '@/src/types';
 import { useQuizStore } from '@/src/store/useQuizStore';
+import { useQuizAnswerStore } from '@/src/store/useAnswerStore';
 import QuizNotFound from '@/src/components/quiz/QuizNotFound';
 import QuizNotPublished from '@/src/components/quiz/QuizNotPublished';
 import QuizSubmitted from '@/src/components/quiz/QuizSubmitted';
 import { QuizNavigation } from '@/src/components/quiz/QuizNavigation';
-import { useQuizAnswerStore } from '@/src/store/useAnswerStore';
 import { QuestionBlock } from '@/src/components/QuestionBlock';
 
 export default function QuizPreview() {
@@ -25,14 +25,16 @@ export default function QuizPreview() {
   const quiz = quizzes.find((q) => q.id === quizId);
 
   useEffect(() => {
-    if (quizzes.length === 0) {
-      loadQuizzes();
-    }
+    if (quizzes.length === 0) loadQuizzes();
     resetAnswers();
   }, [quizzes.length, loadQuizzes, resetAnswers]);
 
-  if (!quiz) return <QuizNotFound />;
-  if (!quiz.published) return <QuizNotPublished id={quizId} />;
+  if (!quiz) {
+    return <QuizNotFound />;
+  }
+  if (!quiz.published) {
+    return <QuizNotPublished id={quizId} />;
+  }
 
   const blocks = quiz.blocks.filter((b) => b.type === BlockEnum.QUESTION);
   const currentBlock = blocks[currentIndex];
@@ -45,22 +47,30 @@ export default function QuizPreview() {
       const q = block.properties.question;
       const correctIds = q?.correctOptionIds || [];
 
-      if (q?.kind === QuestionKindEnum.TEXT) {
-        if (q?.kind === QuestionKindEnum.TEXT) {
+      switch (q?.kind) {
+        case QuestionKindEnum.TEXT:
           const correctText = q.textAnswer?.trim().toLowerCase();
           if (typeof userAnswer === 'string' && userAnswer.trim().toLowerCase() === correctText) {
             correct++;
           }
-        } else if (Array.isArray(userAnswer)) {
+          break;
+
+        case QuestionKindEnum.SINGLE:
+          if (userAnswer === correctIds[0]) correct++;
+          break;
+
+        case QuestionKindEnum.MULTI:
           if (
+            Array.isArray(userAnswer) &&
             userAnswer.length === correctIds.length &&
             userAnswer.every((id) => correctIds.includes(id))
           ) {
             correct++;
           }
-        }
-      } else if (q?.kind === QuestionKindEnum.SINGLE) {
-        if (userAnswer === correctIds[0]) correct++;
+          break;
+
+        default:
+          break;
       }
     });
 
