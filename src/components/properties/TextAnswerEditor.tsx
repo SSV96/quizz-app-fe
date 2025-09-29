@@ -1,16 +1,21 @@
 'use client';
+import { QuestionPayload } from '@/src/types';
 import React from 'react';
+import { TextField } from '@mui/material';
 
 export const TextAnswerEditor = ({
   localQuestion,
   setLocalQuestion,
 }: {
-  localQuestion: any;
-  setLocalQuestion: (fn: any) => void;
+  localQuestion: QuestionPayload;
+  setLocalQuestion: React.Dispatch<React.SetStateAction<QuestionPayload | undefined>>;
 }) => {
   return (
-    <input
-      type="text"
+    <TextField
+      fullWidth
+      size="small"
+      label="Answer"
+      variant="outlined"
       value={localQuestion.textAnswer ?? ''}
       onChange={(e) =>
         setLocalQuestion({
@@ -18,7 +23,6 @@ export const TextAnswerEditor = ({
           textAnswer: e.target.value,
         })
       }
-      className="flex-1 border px-3 py-1 rounded"
     />
   );
 };

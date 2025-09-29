@@ -1,20 +1,22 @@
 'use client';
 import React from 'react';
+import { TextField } from '@mui/material';
 
-export const TextQuestion = ({
-  value,
-  onChange,
-}: {
+interface TextQuestionProps {
   value: string;
   onChange: (val: string) => void;
-}) => {
+}
+
+export const TextQuestion: React.FC<TextQuestionProps> = ({ value, onChange }) => {
   return (
-    <input
-      type="text"
+    <TextField
+      fullWidth
+      size="small"
+      variant="outlined"
+      label="Your Answer"
       placeholder="Enter your answer"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="border px-3 py-2 rounded w-full"
     />
   );
 };

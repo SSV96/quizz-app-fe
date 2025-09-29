@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-
+import { Button } from '@mui/material';
 export const QuizNavigation = ({
   currentIndex,
   total,
@@ -16,22 +16,18 @@ export const QuizNavigation = ({
 }) => {
   return (
     <div className="flex justify-between mt-6">
-      <button
-        disabled={currentIndex === 0}
-        onClick={onPrev}
-        className="px-4 py-2 bg-gray-400 text-white rounded disabled:opacity-50"
-      >
+      <Button disabled={currentIndex === 0} onClick={onPrev} variant="contained">
         Previous
-      </button>
+      </Button>
 
       {currentIndex === total - 1 ? (
-        <button onClick={onSubmit} className="px-4 py-2 bg-green-600 text-white rounded">
+        <Button onClick={onSubmit} variant="contained" color="success">
           Submit Quiz
-        </button>
+        </Button>
       ) : (
-        <button onClick={onNext} className="px-4 py-2 bg-blue-600 text-white rounded">
+        <Button onClick={onNext} variant="contained">
           Next
-        </button>
+        </Button>
       )}
     </div>
   );

@@ -1,12 +1,13 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'next/navigation';
-import { BlockEnum } from '@/src/types/block';
-import { useQuizAnswerStore, useQuizStore } from '@/src/store/useCanvasStore';
-import QuizNotFound from '@/src/components/QuizNotFound';
-import QuizNotPublished from '@/src/components/QuizNotPublished';
-import QuizSubmitted from '@/src/components/QuizSubmitted';
-import { QuizNavigation } from '@/src/components/QuizNavigation';
+import { BlockEnum, QuestionKindEnum } from '@/src/types';
+import { useQuizStore } from '@/src/store/useQuizStore';
+import QuizNotFound from '@/src/components/quiz/QuizNotFound';
+import QuizNotPublished from '@/src/components/quiz/QuizNotPublished';
+import QuizSubmitted from '@/src/components/quiz/QuizSubmitted';
+import { QuizNavigation } from '@/src/components/quiz/QuizNavigation';
+import { useQuizAnswerStore } from '@/src/store/useAnswerStore';
 import { QuestionBlock } from '@/src/components/QuestionBlock';
 
 export default function QuizPreview() {
@@ -21,6 +22,8 @@ export default function QuizPreview() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState(0);
 
+  const quiz = quizzes.find((q) => q.id === quizId);
+
   useEffect(() => {
     if (quizzes.length === 0) {
       loadQuizzes();
@@ -28,14 +31,13 @@ export default function QuizPreview() {
     resetAnswers();
   }, [quizzes.length, loadQuizzes, resetAnswers]);
 
-  const quiz = quizzes.find((q) => q.id === quizId);
   if (!quiz) return <QuizNotFound />;
   if (!quiz.published) return <QuizNotPublished id={quizId} />;
 
   const blocks = quiz.blocks.filter((b) => b.type === BlockEnum.QUESTION);
   const currentBlock = blocks[currentIndex];
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     let correct = 0;
 
     blocks.forEach((block) => {
@@ -43,7 +45,7 @@ export default function QuizPreview() {
       const q = block.properties.question;
       const correctIds = q?.correctOptionIds || [];
 
-      if (q?.kind === 'text') {
+      if (q?.kind === QuestionKindEnum.TEXT) {
         const correctText = q.textAnswer?.trim().toLowerCase();
         if (typeof userAnswer === 'string' && userAnswer.trim().toLowerCase() === correctText) {
           correct++;
@@ -55,13 +57,14 @@ export default function QuizPreview() {
         ) {
           correct++;
         }
-      } else if (q?.kind === 'single') {
+      } else if (q?.kind === QuestionKindEnum.SINGLE) {
         if (userAnswer === correctIds[0]) correct++;
       }
     });
+
     setScore(correct);
     setIsSubmitted(true);
-  };
+  }, [answers, blocks]);
 
   if (isSubmitted) {
     return (
@@ -76,18 +79,20 @@ export default function QuizPreview() {
     );
   }
 
+  const hasQuestions = blocks.length > 0 && !!currentBlock;
+
   return (
     <div className="max-w-3xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">{quiz.title || 'Untitled Quiz'}</h1>
 
-      {currentBlock ? (
+      {hasQuestions ? (
         <>
           <QuestionBlock block={currentBlock} index={currentIndex} />
           <QuizNavigation
             currentIndex={currentIndex}
             total={blocks.length}
-            onPrev={() => setCurrentIndex((i) => i - 1)}
-            onNext={() => setCurrentIndex((i) => i + 1)}
+            onPrev={() => setCurrentIndex((i) => Math.max(0, i - 1))}
+            onNext={() => setCurrentIndex((i) => Math.min(blocks.length - 1, i + 1))}
             onSubmit={handleSubmit}
           />
         </>

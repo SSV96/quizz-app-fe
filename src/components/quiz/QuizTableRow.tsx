@@ -4,10 +4,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Quiz } from '../types/block';
+import { Quiz } from '../../types';
 import { TableCell, Tooltip, IconButton } from '@mui/material';
 import { motion } from 'framer-motion';
-import { useQuizStore } from '../store/useCanvasStore';
+import { useQuizStore } from '../../store/useQuizStore';
 import clsx from 'classnames';
 interface QuizTableRowProps {
   quizzes: Quiz[];
