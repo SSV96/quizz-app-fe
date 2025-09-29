@@ -10,17 +10,16 @@ export default function Canvas({ quiz }: { quiz: Quiz }) {
       <h3 className="font-bold mb-4 text-gray-700">Canvas</h3>
 
       <Droppable droppableId={DroppableAreaEnum.CANVAS}>
-        {(provided) => (
+        {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="
-              min-h-[400px] 
-              border-2 border-dashed border-gray-300 
-              p-6 rounded-xl 
-              bg-white 
-              transition-colors
-            "
+            className={`
+        min-h-[400px] 
+        border-2 p-6 rounded-xl
+        transition-colors
+        ${snapshot.isDraggingOver ? 'border-blue-400 bg-blue-50' : 'border-dashed border-gray-300 bg-white'}
+      `}
           >
             {quiz.blocks.map((block, i) => (
               <DraggableItem block={block} index={i} quizId={quiz.id} key={block.id} />

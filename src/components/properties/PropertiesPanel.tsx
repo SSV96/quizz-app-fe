@@ -1,8 +1,9 @@
 'use client';
-import { BlockEnum, Quiz } from '@/src/types';
+import { BlockEnum, ButtonBlock, QuestionBlock, Quiz, TextBlock } from '@/src/types';
 import { QuestionEditor } from './QuestionEditor';
 import { TextBlockEditor } from './TextBlockEditor';
 import { useQuizStore } from '@/src/store/useQuizStore';
+import ButtonProperties from './ButtonProperties';
 
 export const PropertiesPanel = ({ quiz }: { quiz: Quiz }) => {
   const selectedBlockId = useQuizStore((s) => s.selectedBlockId);
@@ -18,12 +19,16 @@ export const PropertiesPanel = ({ quiz }: { quiz: Quiz }) => {
   }
 
   const isQuestionBlock = block?.type === BlockEnum.QUESTION;
+  const isButtonBlock = block?.type === BlockEnum.BUTTON;
+  const isTextBlockEditor = block?.type === BlockEnum.HEADING || block?.type === BlockEnum.FOOTER;
 
   return (
     <div style={{ width: 320 }} className="bg-gray-100 p-4  flex flex-col justify-between h-full">
       <h2>Properties </h2>
       <div className="flex-1">
-        {isQuestionBlock ? <QuestionEditor block={block} /> : <TextBlockEditor block={block} />}
+        {isQuestionBlock && <QuestionEditor block={block as QuestionBlock} />}
+        {isButtonBlock && <ButtonProperties block={block as ButtonBlock} />}
+        {isTextBlockEditor && <TextBlockEditor block={block as TextBlock} />}
       </div>
     </div>
   );

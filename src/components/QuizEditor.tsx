@@ -38,7 +38,8 @@ export default function QuizEditorPage() {
       source.droppableId === DroppableAreaEnum.SIDEBAR &&
       destination.droppableId === DroppableAreaEnum.CANVAS
     ) {
-      addBlock(quizId, draggableId as BlockEnum);
+      addBlock(quizId, draggableId as BlockEnum, destination.index);
+
       return;
     }
 
@@ -65,7 +66,7 @@ export default function QuizEditorPage() {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex flex-1 h-full overflow-hidden">
-        <SidebarBlocks />
+        <SidebarBlocks selectedQuiz={selectedQuiz} />
 
         <Canvas quiz={selectedQuiz} />
 

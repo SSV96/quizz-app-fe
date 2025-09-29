@@ -2,7 +2,8 @@ import { create } from 'zustand';
 import { nanoid } from 'nanoid';
 import { LocalStorage } from '../utils/localstorage';
 import toast from 'react-hot-toast';
-import { Block, BlockEnum, Quiz, QuestionKindEnum } from '../types';
+import { BlockEnum, Quiz, QuestionKindEnum, TQuizBlock } from '../types';
+import { demoQuiz } from '../utils/demo-quiz';
 
 interface QuizStore {
   quizzes: Quiz[];
@@ -13,8 +14,8 @@ interface QuizStore {
   createQuiz: (title: string) => Quiz;
   setSelectedQuiz: (id: string | null) => void;
   selectBlock: (id: string | null) => void;
-  addBlock: (quizId: string, type: Block['type']) => void;
-  updateBlock: (blockId: string, properties: Partial<Block['properties']>) => void;
+  addBlock: (quizId: string, type: TQuizBlock['type'], index: number) => void;
+  updateBlock: (blockId: string, properties: Partial<TQuizBlock['properties']>) => void;
   deleteBlock: (quizId: string, blockId: string) => void;
   saveQuiz: () => void;
   publishQuiz: (quizId: string) => void;
@@ -33,11 +34,12 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   },
 
   createQuiz: (title) => {
+    const blocks = demoQuiz[0].blocks;
     const newQuiz: Quiz = {
       id: nanoid(),
       title,
       published: false,
-      blocks: [],
+      blocks,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -50,37 +52,80 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   setSelectedQuiz: (id) => set({ selectedQuizId: id, selectedBlockId: null }),
   selectBlock: (id) => set({ selectedBlockId: id }),
 
-  addBlock: (quizId, type) =>
+  addBlock: (quizId, type, index) =>
     set((state) => {
-      const newBlock: Block =
-        type === BlockEnum.QUESTION
-          ? {
-              id: nanoid(),
-              type,
-              properties: {
-                question: {
-                  id: nanoid(),
-                  kind: QuestionKindEnum.SINGLE,
-                  text: 'New Question',
-                  options: [
-                    { id: nanoid(), text: 'Option 1' },
-                    { id: nanoid(), text: 'Option 2' },
-                  ],
-                  correctOptionIds: [],
-                },
-              },
-            }
-          : {
-              id: nanoid(),
-              type,
-              properties: {
-                text: type === 'HEADING' ? 'HEADING' : type === 'BUTTON' ? 'Click Me' : 'Footer',
-              },
-            };
+      let newBlockItem: TQuizBlock;
+      switch (type) {
+        case BlockEnum.QUESTION: {
+          newBlockItem = {
+            id: nanoid(),
+            type,
+            properties: {
+              kind: QuestionKindEnum.SINGLE,
+              text: 'New Question',
+              options: [
+                { id: nanoid(), text: 'Option 1' },
+                { id: nanoid(), text: 'Option 2' },
+              ],
+              correctOptionIds: [],
+            },
+          };
+          break;
+        }
+        case BlockEnum.BUTTON: {
+          newBlockItem = {
+            id: nanoid(),
+            type,
+            properties: {
+              previousLabel: 'Previous',
+              nextLabel: 'Next',
+              submitLabel: 'Submit',
+            },
+          };
+          break;
+        }
+        case BlockEnum.HEADING: {
+          newBlockItem = {
+            id: nanoid(),
+            type,
+            properties: {
+              text: 'Header',
+            },
+          };
+          break;
+        }
+        case BlockEnum.FOOTER: {
+          newBlockItem = {
+            id: nanoid(),
+            type,
+            properties: {
+              text: 'Footer',
+            },
+          };
+          break;
+        }
+        default: {
+          newBlockItem = {
+            id: nanoid(),
+            type,
+            properties: {},
+          };
+          break;
+        }
+      }
 
-      const updatedQuizzes = state.quizzes.map((quiz) =>
-        quiz.id === quizId ? { ...quiz, blocks: [...quiz.blocks, newBlock] } : quiz,
-      );
+      const updatedQuizzes = state.quizzes.map((quiz) => {
+        if (quiz.id !== quizId) return quiz;
+
+        const blocks = [...quiz.blocks];
+        if (typeof index === 'number') {
+          blocks.splice(index, 0, newBlockItem);
+        } else {
+          blocks.push(newBlockItem);
+        }
+
+        return { ...quiz, blocks };
+      });
 
       LocalStorage.saveQuizzes(updatedQuizzes);
       return { quizzes: updatedQuizzes };
@@ -98,18 +143,11 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
                 properties: {
                   ...block.properties,
                   ...properties,
-                  question: properties.question
-                    ? {
-                        ...block.properties.question,
-                        ...properties.question,
-                      }
-                    : block.properties.question,
                 },
               }
             : block,
         ),
       }));
-
       LocalStorage.saveQuizzes(updatedQuizzes);
       return { quizzes: updatedQuizzes };
     }),
@@ -131,7 +169,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   saveQuiz: () => {
     const quizzes = get().quizzes;
     LocalStorage.saveQuizzes(quizzes);
-    // toast.success(' Quiz saved successfully');
+    toast.success(' Quiz saved successfully');
   },
 
   publishQuiz: (quizId) =>
@@ -148,7 +186,6 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
     const updatedQuizzes = get().quizzes.map((q) =>
       q.id === quizId ? { ...q, published: !q.published } : q,
     );
-    console.log(quizId, published);
     set({ quizzes: updatedQuizzes });
     toast.success(`Quiz ${published ? 'Published' : 'Drafted'} successfully`);
     LocalStorage.saveQuizzes(updatedQuizzes);

@@ -1,96 +1,82 @@
 'use client';
-import React, { FC } from 'react';
+import React, { ChangeEvent, FC } from 'react';
 import { Delete } from '@mui/icons-material';
 import { Button, TextField, IconButton, Radio, Checkbox, Stack } from '@mui/material';
-import { QuestionKindEnum, QuestionOption, QuestionPayload } from '../../types';
+import { QuestionBlock, QuestionKindEnum, QuestionOption } from '../../types';
 
+type TQuestionProperties = QuestionBlock['properties'];
 interface QuestionOptionsEditorProps {
-  localQuestion: QuestionPayload;
-  setLocalQuestion: React.Dispatch<React.SetStateAction<QuestionPayload | undefined>>;
+  selectedQuestion: QuestionBlock;
+  onAddOption: VoidFunction;
+  onOptionChange: (
+    options?: TQuestionProperties['options'],
+    correctOptionIds?: TQuestionProperties['correctOptionIds'],
+  ) => void;
 }
 
 export const QuestionOptionsEditor: FC<QuestionOptionsEditorProps> = ({
-  localQuestion,
-  setLocalQuestion,
+  selectedQuestion,
+  onAddOption,
+  onOptionChange,
 }) => {
-  const handleDeleteOption = (optionId: string) => {
-    setLocalQuestion({
-      ...localQuestion,
-      options: localQuestion.options?.filter((o) => o.id !== optionId),
-      correctOptionIds: localQuestion.correctOptionIds?.filter((id) => id !== optionId),
-    });
+  const handleDeleteOption = (optionId: string) => () => {
+    const newOptions = selectedQuestion.properties.options?.filter((o) => o.id !== optionId);
+    const newCorrectOptionIds = selectedQuestion.properties.correctOptionIds?.filter(
+      (id) => id !== optionId,
+    );
+    onOptionChange(newOptions, newCorrectOptionIds);
+  };
+
+  const handleOptionLabelChange = (optionId: string) => (e: ChangeEvent<HTMLInputElement>) => {
+    const options = selectedQuestion.properties.options?.map((o) =>
+      o.id === optionId ? { ...o, text: e.target.value } : o,
+    );
+    onOptionChange(options);
+  };
+
+  const updateSingleAnswer = (correctIds: string[]) => () => {
+    onOptionChange(undefined, correctIds);
+  };
+  const updateMultipleAnswers = (optionId: string) => (e: ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    const correctIds = checked
+      ? [...(selectedQuestion.properties.correctOptionIds || []), optionId]
+      : selectedQuestion.properties.correctOptionIds?.filter((id) => id !== optionId);
+    onOptionChange(undefined, correctIds);
   };
 
   return (
     <>
       <h4 style={{ fontWeight: 600, marginBottom: 8 }}>Options</h4>
 
-      {localQuestion.options?.map((opt: QuestionOption) => (
+      {selectedQuestion.properties.options?.map((opt: QuestionOption) => (
         <Stack key={opt.id} direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
           <TextField
             fullWidth
             size="small"
             value={opt.text}
-            onChange={(e) =>
-              setLocalQuestion({
-                ...localQuestion,
-                options: localQuestion.options?.map((o) =>
-                  o.id === opt.id ? { ...o, text: e.target.value } : o,
-                ),
-              })
-            }
+            onChange={handleOptionLabelChange(opt.id)}
           />
 
-          {localQuestion.kind === QuestionKindEnum.SINGLE ? (
+          {selectedQuestion.properties.kind === QuestionKindEnum.SINGLE ? (
             <Radio
-              checked={localQuestion.correctOptionIds?.[0] === opt.id}
-              onChange={() =>
-                setLocalQuestion({
-                  ...localQuestion,
-                  correctOptionIds: [opt.id],
-                })
-              }
+              checked={selectedQuestion.properties.correctOptionIds?.[0] === opt.id}
+              onChange={updateSingleAnswer([opt.id])}
             />
           ) : (
             <Checkbox
-              checked={localQuestion.correctOptionIds?.includes(opt.id)}
-              onChange={(e) => {
-                const checked = e.target.checked;
-                setLocalQuestion({
-                  ...localQuestion,
-                  correctOptionIds: checked
-                    ? [...(localQuestion.correctOptionIds || []), opt.id]
-                    : localQuestion.correctOptionIds?.filter((id) => id !== opt.id),
-                });
-              }}
+              checked={selectedQuestion.properties.correctOptionIds?.includes(opt.id)}
+              onChange={updateMultipleAnswers(opt.id)}
             />
           )}
 
-          <IconButton color="error" onClick={() => handleDeleteOption(opt.id)} size="small">
+          <IconButton color="error" onClick={handleDeleteOption(opt.id)} size="small">
             <Delete />
           </IconButton>
         </Stack>
       ))}
 
-      <Button
-        variant="contained"
-        color="success"
-        size="small"
-        sx={{ mt: 1 }}
-        onClick={() => {
-          const optionCount = localQuestion?.options?.length ?? 0;
-          setLocalQuestion({
-            ...localQuestion,
-            options: [
-              ...(localQuestion?.options || []),
-              {
-                id: crypto.randomUUID(),
-                text: `Option ${optionCount + 1}`,
-              },
-            ],
-          });
-        }}
-      >
+      <Button variant="contained" color="success" size="small" sx={{ mt: 1 }} onClick={onAddOption}>
         + Add Option
       </Button>
     </>

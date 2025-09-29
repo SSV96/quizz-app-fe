@@ -14,7 +14,7 @@ export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }) => {
   const togglePublishQuiz = useQuizStore((s) => s.togglePublishQuiz);
 
   return (
-    <div className="flex justify-end gap-2">
+    <div className="flex justify-end w-full gap-2">
       {quiz && (
         <Zoom in>
           <Button

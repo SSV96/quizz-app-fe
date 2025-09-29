@@ -1,57 +1,76 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import { Block, BlockEnum, QuestionKindEnum } from '../../types';
+import React, { FC, useEffect, useState, ChangeEvent } from 'react';
+import { QuestionBlock, QuestionKindEnum } from '../../types';
 import { useQuizStore } from '../../store/useQuizStore';
 import { TextAnswerEditor } from './TextAnswerEditor';
 import { QuestionOptionsEditor } from './QuestionOptionsEditor';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
-export const QuestionEditor = ({ block }: { block: Block }) => {
+interface QuestionEditorProps {
+  block: QuestionBlock;
+}
+type TQuestionProperties = QuestionBlock['properties'];
+
+export const QuestionEditor: FC<QuestionEditorProps> = ({ block }) => {
   const updateBlock = useQuizStore((s) => s.updateBlock);
-  const [localQuestion, setLocalQuestion] = useState(block?.properties.question);
+  const { id, properties } = block;
 
-  useEffect(() => {
-    if (block?.type === BlockEnum.QUESTION) {
-      setLocalQuestion(block.properties.question);
-    }
-  }, [block]);
+  if (!block) {
+    return;
+  }
 
-  useEffect(() => {
-    if (block?.type === BlockEnum.QUESTION && localQuestion) {
-      const timeout = setTimeout(() => {
-        updateBlock(block.id, { question: localQuestion });
-      }, 300);
-      return () => clearTimeout(timeout);
-    }
-  }, [localQuestion, block?.id, block?.type, updateBlock]);
+  const selectedQuestionKind = properties.kind ?? QuestionKindEnum.SINGLE;
 
-  if (!localQuestion) return;
+  const handleQuestionKindChange = (e: SelectChangeEvent) => {
+    updateBlock(id, { ...properties, kind: e.target.value as QuestionKindEnum });
+  };
 
-  const localQuestionKind = localQuestion.kind ?? QuestionKindEnum.SINGLE;
+  const handleTextAnswerChange = (e: ChangeEvent<HTMLInputElement>) => {
+    updateBlock(id, { ...properties, textAnswer: e.target.value });
+  };
 
-  const handleKindChange = (e: SelectChangeEvent) => {
-    setLocalQuestion({
-      ...localQuestion,
-      kind: e.target.value as QuestionKindEnum,
-      correctOptionIds: [],
+  const handleOptionAnswerChange = (e: ChangeEvent<HTMLInputElement>) => {
+    updateBlock(id, { ...properties, textAnswer: e.target.value });
+  };
+
+  const optionCount = properties?.options?.length ?? 0;
+  const handleAddNewOption = () => {
+    updateBlock(id, {
+      ...properties,
+      options: [
+        ...(properties.options ?? []),
+        {
+          id: crypto.randomUUID(),
+          text: `Option ${optionCount + 1}`,
+        },
+      ],
     });
   };
 
-  const isTextQuestion = localQuestionKind === QuestionKindEnum.TEXT;
+  const handleOptionChange = (
+    options?: TQuestionProperties['options'],
+    correctOptionIds?: TQuestionProperties['correctOptionIds'],
+  ) => {
+    updateBlock(id, {
+      ...properties,
+      options: [...(options ?? properties.options ?? [])],
+      correctOptionIds: [...(correctOptionIds ?? properties.correctOptionIds ?? [])],
+    });
+  };
+
+  const isTextQuestion = selectedQuestionKind === QuestionKindEnum.TEXT;
 
   return (
     <>
       <h3 className="font-bold mb-3">Edit Question</h3>
-      <p className="font-semibold text-gray-700 mb-3">
-        {localQuestion.text || 'Untitled Question'}
-      </p>
+      <p className="font-semibold text-gray-700 mb-3">{properties.title || 'Untitled Question'}</p>
 
       <FormControl fullWidth margin="normal" size="small">
         <InputLabel id="question-kind-label">Question Type</InputLabel>
         <Select
           labelId="question-kind-label"
-          value={localQuestionKind}
-          onChange={handleKindChange}
+          value={selectedQuestionKind}
+          onChange={handleQuestionKindChange}
           label="Question Type"
         >
           <MenuItem value={QuestionKindEnum.SINGLE}>Single Choice</MenuItem>
@@ -61,9 +80,13 @@ export const QuestionEditor = ({ block }: { block: Block }) => {
       </FormControl>
 
       {isTextQuestion ? (
-        <TextAnswerEditor localQuestion={localQuestion} setLocalQuestion={setLocalQuestion} />
+        <TextAnswerEditor selectedQuestion={block} onTextAnswerChange={handleTextAnswerChange} />
       ) : (
-        <QuestionOptionsEditor localQuestion={localQuestion} setLocalQuestion={setLocalQuestion} />
+        <QuestionOptionsEditor
+          selectedQuestion={block}
+          onAddOption={handleAddNewOption}
+          onOptionChange={handleOptionChange}
+        />
       )}
     </>
   );

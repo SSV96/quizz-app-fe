@@ -1,46 +1,40 @@
 'use client';
 import React from 'react';
-import { Block, QuestionKindEnum } from '@/src/types';
+import { QuestionKindEnum, QuestionBlock } from '@/src/types';
 import { TextQuestion } from './TextQuestion';
 import { ChoiceQuestion } from './ChoiceQuestion';
 import { useQuizAnswerStore } from '../store/useAnswerStore';
 
 interface QuestionBlockProps {
-  block: Block;
+  block: QuestionBlock;
   index: number;
 }
 
-export const QuestionBlock: React.FC<QuestionBlockProps> = ({ block, index }) => {
+export const QuestionPreviewBlock: React.FC<QuestionBlockProps> = ({ block, index }) => {
   const { answers, setAnswer } = useQuizAnswerStore();
-  const q = block.properties.question;
+  const q = block.properties;
 
-  let QuestionContent: React.ReactNode = null;
-
-  if (q?.kind === QuestionKindEnum.TEXT) {
-    QuestionContent = (
-      <TextQuestion
-        value={(answers[block.id] as string) || ''}
-        onChange={(val) => setAnswer(block.id, val)}
-      />
-    );
-  } else if (q) {
-    QuestionContent = (
-      <ChoiceQuestion
-        kind={q.kind}
-        options={q.options || []}
-        value={answers[block.id]}
-        onChange={(val) => setAnswer(block.id, val)}
-        blockId={block.id}
-      />
-    );
-  }
+  const isTextQuestion = q?.kind === QuestionKindEnum.TEXT;
 
   return (
     <div className="p-4 border rounded shadow-sm bg-gray-50 space-y-4">
       <p className="font-medium">
-        Q{index + 1}. {q?.text || 'Untitled Question'}
+        Q{index + 1}. {q.title || 'Untitled Question'}
       </p>
-      {QuestionContent}
+      {isTextQuestion ? (
+        <TextQuestion
+          value={(answers[block.id] as string) || ''}
+          onChange={(val) => setAnswer(block.id, val)}
+        />
+      ) : (
+        <ChoiceQuestion
+          kind={q.kind}
+          options={q.options || []}
+          value={answers[block.id]}
+          onChange={(val) => setAnswer(block.id, val)}
+          blockId={block.id}
+        />
+      )}
     </div>
   );
 };

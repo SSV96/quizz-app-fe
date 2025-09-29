@@ -1,8 +1,11 @@
 'use client';
-import { Block } from '@/src/types';
-import React from 'react';
+import { TextBlock } from '@/src/types';
+import React, { FC } from 'react';
 
-export const TextBlockEditor = ({ block }: { block: Block }) => {
+interface ITextBlockEditorProps {
+  block: TextBlock;
+}
+export const TextBlockEditor: FC<ITextBlockEditorProps> = ({ block }) => {
   return (
     <>
       <h3 className="font-bold mb-3">Edit {block.type}</h3>

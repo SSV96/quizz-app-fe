@@ -1,13 +1,13 @@
 import { Draggable } from '@hello-pangea/dnd';
 import React, { FC } from 'react';
 import BlockRenderer from '../BlockRenderer';
-import { Block } from '../../types';
+import { TQuizBlock } from '../../types';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useQuizStore } from '../../store/useQuizStore';
 import cx from 'classnames';
 
 interface DraggableItemProps {
-  block: Block;
+  block: TQuizBlock;
   quizId: string;
   index: number;
 }
@@ -19,7 +19,7 @@ const DraggableItem: FC<DraggableItemProps> = ({ block, quizId, index }) => {
   const deleteBlock = useQuizStore((s) => s.deleteBlock);
 
   return (
-    <Draggable key={block.id} draggableId={block.id} index={index}>
+    <Draggable draggableId={block.id} index={index}>
       {(prov) => (
         <div
           ref={prov.innerRef}

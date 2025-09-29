@@ -2,15 +2,12 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { SavePublishPanel } from './SavePublishPanel';
-import { Quiz } from '@/src/types';
 
 interface NavbarProps {
   isHome: boolean;
-  quiz?: Quiz;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isHome, quiz }) => {
+const Navbar: React.FC<NavbarProps> = ({ isHome }) => {
   const router = useRouter();
 
   const handleCreateQuiz = () => {
@@ -18,15 +15,13 @@ const Navbar: React.FC<NavbarProps> = ({ isHome, quiz }) => {
   };
 
   return (
-    <div>
-      {isHome ? (
+    <nav className="flex flex-row-reverse w-full">
+      {isHome && (
         <Button className="!bg-teal-700 !text-white" onClick={handleCreateQuiz}>
           Create Quiz
         </Button>
-      ) : (
-        <SavePublishPanel quiz={quiz} />
       )}
-    </div>
+    </nav>
   );
 };
 

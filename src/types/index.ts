@@ -21,30 +21,54 @@ export interface QuestionOption {
   text: string;
 }
 
-export interface QuestionPayload {
-  id?: string;
+export interface QuestionProperties {
+  title?: string;
   kind?: QuestionKindEnum;
-  text: string;
   textAnswer?: string;
   options?: QuestionOption[];
   correctOptionIds?: string[];
 }
 
-export interface Block {
+export interface QuestionBlock {
+  id: string;
+  type: BlockEnum.QUESTION;
+  properties: QuestionProperties;
+}
+
+export interface ITextBlockProperties {
+  text?: string;
+}
+
+export interface TextBlock {
+  id: string;
+  type: BlockEnum.HEADING | BlockEnum.FOOTER;
+  properties: ITextBlockProperties;
+}
+
+export interface IButtonBlockProperties {
+  nextLabel: string;
+  previousLabel: string;
+  submitLabel: string;
+}
+
+export interface ButtonBlock {
+  id: string;
+  type: BlockEnum.BUTTON;
+  properties: IButtonBlockProperties;
+}
+
+export interface IUnknownBlock {
   id: string;
   type: BlockEnum;
-  properties: {
-    text?: string;
-    question?: QuestionPayload;
-    style?: Record<string, string | number>;
-    options?: QuestionOption[];
-  };
+  properties: any;
 }
+
+export type TQuizBlock = QuestionBlock | TextBlock | ButtonBlock | IUnknownBlock;
 
 export interface Quiz {
   id: string;
   title: string;
-  blocks: Block[];
+  blocks: TQuizBlock[];
   published: boolean;
   createdAt: string;
   updatedAt: string;

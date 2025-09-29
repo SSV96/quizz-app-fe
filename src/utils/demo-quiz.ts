@@ -1,6 +1,7 @@
 'use client';
 import { BlockEnum, QuestionKindEnum, Quiz } from '../types';
 const today = new Date().toISOString();
+
 export const demoQuiz: Quiz[] = [
   {
     id: 'quiz-1',
@@ -17,34 +18,38 @@ export const demoQuiz: Quiz[] = [
         id: 'block-2',
         type: BlockEnum.QUESTION,
         properties: {
-          question: {
-            id: 'q1',
-            kind: QuestionKindEnum.SINGLE,
-            text: 'What is React?',
-            options: [
-              { id: 'o1', text: 'A JavaScript library' },
-              { id: 'o2', text: 'A CSS framework' },
-              { id: 'o3', text: 'A database' },
-            ],
-            correctOptionIds: ['o1'],
-          },
+          kind: QuestionKindEnum.SINGLE,
+
+          title: 'what is the React',
+          options: [
+            { id: 'o1', text: 'A JavaScript library' },
+            { id: 'o2', text: 'A CSS framework' },
+            { id: 'o3', text: 'A database' },
+          ],
+          correctOptionIds: ['o1'],
         },
       },
       {
         id: 'block-3',
         type: BlockEnum.QUESTION,
         properties: {
-          question: {
-            id: 'q2',
-            kind: QuestionKindEnum.MULTI,
-            text: 'Which features belong to React?',
-            options: [
-              { id: 'o1', text: 'Virtual DOM' },
-              { id: 'o2', text: 'State management' },
-              { id: 'o3', text: 'Built-in SQL engine' },
-            ],
-            correctOptionIds: ['o1', 'o2'],
-          },
+          kind: QuestionKindEnum.MULTI,
+          textAnswer: 'Which features belong to React?',
+          options: [
+            { id: 'o1', text: 'Virtual DOM' },
+            { id: 'o2', text: 'State management' },
+            { id: 'o3', text: 'Built-in SQL engine' },
+          ],
+          correctOptionIds: ['o1', 'o2'],
+        },
+      },
+      {
+        id: 'block-4',
+        type: BlockEnum.BUTTON,
+        properties: {
+          previousLabel: 'Previous',
+          nextLabel: 'Next',
+          submitLabel: 'Submit',
         },
       },
       {
@@ -75,28 +80,31 @@ export const demoQuiz: Quiz[] = [
         id: 'block-2',
         type: BlockEnum.QUESTION,
         properties: {
-          question: {
-            id: 'q1',
-            kind: QuestionKindEnum.TEXT,
-            text: 'Explain closures in JavaScript.',
-          },
+          kind: QuestionKindEnum.TEXT,
+          textAnswer: 'Explain closures in JavaScript.',
         },
       },
       {
         id: 'block-3',
         type: BlockEnum.QUESTION,
         properties: {
-          question: {
-            id: 'q2',
-            kind: QuestionKindEnum.SINGLE,
-            text: 'Which of the following is NOT a JavaScript data type?',
-            options: [
-              { id: 'o1', text: 'String' },
-              { id: 'o2', text: 'Boolean' },
-              { id: 'o3', text: 'Float' },
-            ],
-            correctOptionIds: ['o3'],
-          },
+          kind: QuestionKindEnum.SINGLE,
+          textAnswer: 'Which of the following is NOT a JavaScript data type?',
+          options: [
+            { id: 'o1', text: 'String' },
+            { id: 'o2', text: 'Boolean' },
+            { id: 'o3', text: 'Float' },
+          ],
+          correctOptionIds: ['o3'],
+        },
+      },
+      {
+        id: 'block-4',
+        type: BlockEnum.BUTTON,
+        properties: {
+          previousLabel: 'Previous',
+          nextLabel: 'Next',
+          submitLabel: 'Submit',
         },
       },
     ],
