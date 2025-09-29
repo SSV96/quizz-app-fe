@@ -21,6 +21,7 @@
     "@hello-pangea/dnd": "^18.0.1",
     "@mui/icons-material": "^7.3.2",
     "@mui/material": "^7.3.2",
+    "classnames": "^2.5.1",
     "dayjs": "^1.11.18",
     "framer-motion": "^12.23.12",
     "next": "15.5.2",

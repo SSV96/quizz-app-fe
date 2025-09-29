@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { FC } from 'react';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 import { BlockEnum } from '../types/block';
 
@@ -10,7 +10,7 @@ const palette = [
   { type: BlockEnum.FOOTER, label: 'Footer' },
 ];
 
-export default function SidebarBlocks() {
+export const SidebarBlocks: FC = () => {
   return (
     <div style={{ width: 240 }} className="border-r p-4 bg-gray-50 transition-colors">
       <h3 className="font-bold mb-4 text-gray-700">Building blocks</h3>
@@ -48,4 +48,5 @@ export default function SidebarBlocks() {
       </Droppable>
     </div>
   );
-}
+};
+export default SidebarBlocks;

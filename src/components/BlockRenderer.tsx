@@ -8,7 +8,7 @@ interface BlockRendererProps {
 
 const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (block.type === BlockEnum.HEADING) {
+    if (block.type === BlockEnum.HEADING || block.type === BlockEnum.FOOTER) {
       updateBlock(block.id, { text: e.target.value });
     } else if (block.type === BlockEnum.QUESTION) {
       updateBlock(block.id, {
@@ -20,7 +20,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => 
     }
   };
 
-  if (block.type === BlockEnum.HEADING) {
+  if (block.type === BlockEnum.HEADING || block.type === BlockEnum.FOOTER) {
     return (
       <input
         type="text"
@@ -42,7 +42,7 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => 
     );
   }
 
-  if (block.type === BlockEnum.BUTTON || block.type === BlockEnum.FOOTER) {
+  if (block.type === BlockEnum.BUTTON) {
     return <span className="text-gray-800 font-medium">{block.properties.text}</span>;
   }
 

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { FC } from 'react';
 
-const QuizNotFound = () => {
+const QuizNotFound: FC = () => {
   const router = useRouter();
   return (
     <div className="p-8 text-center text-red-500">
