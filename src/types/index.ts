@@ -65,7 +65,7 @@ export interface IButtonBlock extends UpdateFlags {
 export interface IUnknownBlock {
   id: string;
   type: BlockEnum;
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
   isNew?: boolean;
   isUpdated?: boolean;
   isDeleted?: boolean;
