@@ -1,50 +1,79 @@
 'use client';
 import React from 'react';
-import { QuestionKindEnum } from '@/src/types/block';
+import {
+  FormControl,
+  FormGroup,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Checkbox,
+} from '@mui/material';
+import { QuestionKindEnum } from '@/src/types';
 
-export const ChoiceQuestion = ({
+interface ChoiceQuestionProps {
+  kind?: QuestionKindEnum;
+  options: { id: string; text: string }[];
+  value: string | string[];
+  onChange: (val: string | string[]) => void;
+  blockId: string;
+}
+
+export const ChoiceQuestion: React.FC<ChoiceQuestionProps> = ({
   kind,
   options,
   value,
   onChange,
   blockId,
-}: {
-  kind: QuestionKindEnum;
-  options: { id: string; text: string }[];
-  value: string | string[];
-  onChange: (val: string | string[]) => void;
-  blockId: string;
 }) => {
-  return (
-    <div className="space-y-2">
-      {options.map((opt) => {
-        const isMulti = kind === QuestionKindEnum.MULTI;
-        const checked = Array.isArray(value) ? value.includes(opt.id) : value === opt.id;
+  const isMulti = kind === QuestionKindEnum.MULTI;
 
-        return (
-          <label key={opt.id} className="flex items-center gap-2 cursor-pointer">
-            <input
-              type={isMulti ? 'checkbox' : 'radio'}
-              name={blockId}
-              value={opt.id}
-              checked={checked}
-              onChange={(e) => {
-                if (isMulti) {
-                  const prev = Array.isArray(value) ? value : [];
-                  if (e.target.checked) {
-                    onChange([...prev, opt.id]);
-                  } else {
-                    onChange(prev.filter((id) => id !== opt.id));
-                  }
-                } else {
-                  onChange(opt.id);
+  if (isMulti) {
+    return (
+      <FormControl component="fieldset">
+        <FormGroup>
+          {options.map((opt) => {
+            const checked = Array.isArray(value) && value.includes(opt.id);
+            return (
+              <FormControlLabel
+                key={opt.id}
+                control={
+                  <Checkbox
+                    checked={checked}
+                    onChange={(e) => {
+                      const prev = Array.isArray(value) ? value : [];
+                      if (e.target.checked) {
+                        onChange([...prev, opt.id]);
+                      } else {
+                        onChange(prev.filter((id) => id !== opt.id));
+                      }
+                    }}
+                  />
                 }
-              }}
-            />
-            <span>{opt.text || 'Untitled Option'}</span>
-          </label>
-        );
-      })}
-    </div>
+                label={opt.text || 'Untitled Option'}
+              />
+            );
+          })}
+        </FormGroup>
+      </FormControl>
+    );
+  }
+
+  return (
+    <FormControl component="fieldset">
+      <RadioGroup
+        name={blockId}
+        value={typeof value === 'string' ? value : ''}
+        onChange={(e) => onChange(e.target.value)}
+      >
+        {options.map((opt) => (
+          <FormControlLabel
+            key={opt.id}
+            value={opt.id}
+            control={<Radio />}
+            label={opt.text || 'Untitled Option'}
+          />
+        ))}
+      </RadioGroup>
+    </FormControl>
   );
 };

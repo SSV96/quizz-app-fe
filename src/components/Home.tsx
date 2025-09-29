@@ -1,9 +1,10 @@
 'use client';
 import { useEffect } from 'react';
-import { useQuizStore } from '../store/useCanvasStore';
-import QuizTable from './QuizTable';
-import Heading from './Heading';
-import QuizsEmptyMessage from './QuizsEmptyMessage';
+import { useQuizStore } from '../store/useQuizStore';
+import QuizTable from './quiz/QuizTable';
+import QuizsEmptyMessage from './quiz/QuizsEmptyMessage';
+import { Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 const Home = () => {
   const quizzes = useQuizStore((s) => s.quizzes);
@@ -14,9 +15,7 @@ const Home = () => {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-8">
-        <Heading />
-      </div>
+      <div className="flex flex-row-reverse mb-8"></div>
       {quizzes.length === 0 ? <QuizsEmptyMessage /> : <QuizTable quizzes={quizzes} />}
     </div>
   );

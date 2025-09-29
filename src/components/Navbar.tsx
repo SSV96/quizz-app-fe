@@ -1,23 +1,25 @@
+'use client';
 import React from 'react';
-import Link from 'next/link';
 
-const NavLinks = [
-  { url: '/', title: 'Home' },
-  { url: '/quiz/edit', title: 'Create Quiz' },
-];
+import { Button } from '@mui/material';
+import { useRouter, usePathname } from 'next/navigation';
 
 const Navbar = () => {
+  const router = useRouter();
+  const pathname = usePathname(); // get current route
+
+  const handleCreateQuiz = () => {
+    router.push(`/quiz/edit`);
+  };
+
   return (
-    <nav className="flex space-x-8">
-      {NavLinks.map((link) => (
-        <Link
-          className="nav-link text-gray-700 hover:text-blue-600 font-medium transition"
-          href={link.url}
-          key={link.title}
-        >
-          {link.title}
-        </Link>
-      ))}
+    <nav className="flex space-x-8 items-center">
+      {/* Render button only on home page */}
+      {pathname === '/' && (
+        <Button className="!bg-green-500 !text-white" onClick={handleCreateQuiz}>
+          Create Quiz
+        </Button>
+      )}
     </nav>
   );
 };

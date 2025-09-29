@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { nanoid } from 'nanoid';
 import { LocalStorage } from '../utils/localstorage';
 import toast from 'react-hot-toast';
-import { Block, BlockEnum, Quiz, QuestionKindEnum } from '../types/block';
+import { Block, BlockEnum, Quiz, QuestionKindEnum } from '../types';
 
 interface QuizStore {
   quizzes: Quiz[];
@@ -19,28 +19,8 @@ interface QuizStore {
   saveQuiz: () => void;
   publishQuiz: (quizId: string) => void;
   deleteQuiz: (quizId: string) => void;
-  togglePublishQuiz: (quizId: string) => void;
+  togglePublishQuiz: (quizId: string, published: boolean) => void;
 }
-
-interface AnswerState {
-  answers: Record<string, string | string[]>;
-  setAnswer: (blockId: string, value: string | string[]) => void;
-  resetAnswers: () => void;
-}
-
-export const useQuizAnswerStore = create<AnswerState>((set) => ({
-  answers: {},
-
-  setAnswer: (blockId, value) =>
-    set((state) => ({
-      answers: {
-        ...state.answers,
-        [blockId]: value,
-      },
-    })),
-
-  resetAnswers: () => set({ answers: {} }),
-}));
 
 export const useQuizStore = create<QuizStore>((set, get) => ({
   quizzes: [],
@@ -94,7 +74,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
               id: nanoid(),
               type,
               properties: {
-                text: type === 'heading' ? 'Heading' : type === 'button' ? 'Click Me' : 'Footer',
+                text: type === 'HEADING' ? 'HEADING' : type === 'BUTTON' ? 'Click Me' : 'Footer',
               },
             };
 
@@ -151,7 +131,7 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
   saveQuiz: () => {
     const quizzes = get().quizzes;
     LocalStorage.saveQuizzes(quizzes);
-    toast.success(' Quiz saved successfully');
+    // toast.success(' Quiz saved successfully');
   },
 
   publishQuiz: (quizId) =>
@@ -164,11 +144,13 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
       return { quizzes: updatedQuizzes };
     }),
 
-  togglePublishQuiz: (quizId) => {
+  togglePublishQuiz: (quizId, published) => {
     const updatedQuizzes = get().quizzes.map((q) =>
       q.id === quizId ? { ...q, published: !q.published } : q,
     );
+    console.log(quizId, published);
     set({ quizzes: updatedQuizzes });
+    toast.success(`Quiz ${published ? 'Published' : 'Drafted'} successfully`);
     LocalStorage.saveQuizzes(updatedQuizzes);
   },
 

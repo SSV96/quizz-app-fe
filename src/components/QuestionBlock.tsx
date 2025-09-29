@@ -1,34 +1,41 @@
 'use client';
-import React from 'react';
-import { QuestionKindEnum } from '@/src/types/block';
-import { useQuizAnswerStore } from '@/src/store/useCanvasStore';
+import React, { ReactNode } from 'react';
+import { Block, QuestionKindEnum } from '@/src/types';
 import { TextQuestion } from './TextQuestion';
 import { ChoiceQuestion } from './ChoiceQuestion';
+import { useQuizAnswerStore } from '../store/useAnswerStore';
 
-export const QuestionBlock = ({ block, index }: { block: any; index: number }) => {
+export const QuestionBlock = ({ block, index }: { block: Block; index: number }) => {
   const { answers, setAnswer } = useQuizAnswerStore();
   const q = block.properties.question;
+
+  let QuestionContent: ReactNode;
+
+  if (q?.kind === QuestionKindEnum.TEXT) {
+    QuestionContent = (
+      <TextQuestion
+        value={(answers[block.id] as string) || ''}
+        onChange={(val) => setAnswer(block.id, val)}
+      />
+    );
+  } else {
+    QuestionContent = (
+      <ChoiceQuestion
+        kind={q?.kind}
+        options={q?.options || []}
+        value={answers[block.id]}
+        onChange={(val) => setAnswer(block.id, val)}
+        blockId={block.id}
+      />
+    );
+  }
 
   return (
     <div className="p-4 border rounded shadow-sm bg-gray-50 space-y-4">
       <p className="font-medium">
         Q{index + 1}. {q?.text || 'Untitled Question'}
       </p>
-
-      {q?.kind === QuestionKindEnum.TEXT ? (
-        <TextQuestion
-          value={(answers[block.id] as string) || ''}
-          onChange={(val) => setAnswer(block.id, val)}
-        />
-      ) : (
-        <ChoiceQuestion
-          kind={q?.kind}
-          options={q?.options || []}
-          value={answers[block.id]}
-          onChange={(val) => setAnswer(block.id, val)}
-          blockId={block.id}
-        />
-      )}
+      {QuestionContent}
     </div>
   );
 };

@@ -1,7 +1,8 @@
 'use client';
+import { Block } from '@/src/types';
 import React from 'react';
 
-export const TextBlockEditor = ({ block }: { block: any }) => {
+export const TextBlockEditor = ({ block }: { block: Block }) => {
   return (
     <>
       <h3 className="font-bold mb-3">Edit {block.type}</h3>

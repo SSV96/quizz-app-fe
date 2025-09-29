@@ -1,4 +1,4 @@
-import { Quiz } from '../types/block';
+import { Quiz } from '../types';
 import { demoQuiz } from './demo-quiz';
 
 const STORAGE_KEY = 'quiz_app.quizzes';

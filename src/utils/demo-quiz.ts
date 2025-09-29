@@ -1,5 +1,5 @@
 'use client';
-import { BlockEnum, QuestionKindEnum, Quiz } from '../types/block';
+import { BlockEnum, QuestionKindEnum, Quiz } from '../types';
 const today = new Date().toISOString();
 export const demoQuiz: Quiz[] = [
   {

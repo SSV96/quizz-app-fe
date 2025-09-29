@@ -1,44 +1,50 @@
-import React, { FC } from 'react';
-import { Button, Zoom, FormControlLabel, Switch } from '@mui/material';
+import React, { FC, useEffect, useState } from 'react';
+import { Button, TextField, Zoom } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
-import { useQuizStore } from '../store/useCanvasStore';
-import { Quiz } from '../types/block';
+import { useQuizStore } from '../store/useQuizStore';
+import { Flag } from '@mui/icons-material';
+import cx from 'classnames';
+import { Quiz } from '../types';
 
 interface SavePublishPanelProps {
   quiz?: Quiz;
 }
 
-export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }: { quiz?: Quiz }) => {
+export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }) => {
   const togglePublishQuiz = useQuizStore((s) => s.togglePublishQuiz);
 
   return (
-    <div className="mt-auto pt-4 border-t flex flex-col gap-3">
+    <div className="flex justify-end gap-2">
+      {quiz && (
+        <Zoom in>
+          <Button
+            variant="contained"
+            color="inherit"
+            onClick={() => togglePublishQuiz(quiz.id, !quiz.published)}
+            className={cx('flex items-center gap-1 !rounded-md !px-2 !py-3 shadow-lg', {
+              '!bg-green-500 !hover:bg-green-600 !text-white': quiz.published,
+              '!bg-gray-400 !hover:bg-gray-500 !text-white': !quiz.published,
+            })}
+          >
+            <Flag />
+            <span className="inline-block w-20 text-center">
+              {quiz.published ? 'Published' : 'Draft'}
+            </span>
+          </Button>
+        </Zoom>
+      )}
+
       <Zoom in>
         <Button
           variant="contained"
           color="success"
           startIcon={<SaveIcon />}
           onClick={() => useQuizStore.getState().saveQuiz()}
-          className="!rounded-xl !px-6 !py-3 shadow-lg"
+          className="!rounded-md !px-2 !py-3 shadow-lg"
         >
           Save Quiz
         </Button>
       </Zoom>
-
-      {quiz && (
-        <Zoom in>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={quiz.published}
-                onChange={() => togglePublishQuiz(quiz.id)}
-                color="primary"
-              />
-            }
-            label={quiz.published ? 'Published' : 'Draft'}
-          />
-        </Zoom>
-      )}
     </div>
   );
 };
