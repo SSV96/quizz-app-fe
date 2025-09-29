@@ -1,17 +1,11 @@
 'use client';
 import React from 'react';
-import { Droppable, Draggable } from '@hello-pangea/dnd';
+import { Droppable } from '@hello-pangea/dnd';
 import { useQuizStore } from '../store/useCanvasStore';
-import DeleteIcon from '@mui/icons-material/Delete';
-import BlockRenderer from './BlockRenderer';
-
+import DraggableItem from './DraggableItem';
 export default function Canvas() {
   const quizzes = useQuizStore((s) => s.quizzes);
   const selectedQuizId = useQuizStore((s) => s.selectedQuizId);
-  const selectedBlockId = useQuizStore((s) => s.selectedBlockId);
-  const selectBlock = useQuizStore((s) => s.selectBlock);
-  const updateBlock = useQuizStore((s) => s.updateBlock);
-  const deleteBlock = useQuizStore((s) => s.deleteBlock);
 
   const quiz = quizzes.find((q) => q.id === selectedQuizId);
   const blocks = quiz?.blocks || [];
@@ -38,38 +32,7 @@ export default function Canvas() {
             )}
 
             {blocks.map((block, i) => (
-              <Draggable key={block.id} draggableId={block.id} index={i}>
-                {(prov) => (
-                  <div
-                    ref={prov.innerRef}
-                    {...prov.draggableProps}
-                    {...prov.dragHandleProps}
-                    className={`
-                      p-4 mb-4 rounded-lg 
-                      border shadow-sm 
-                      bg-white
-                      cursor-pointer flex justify-between items-center
-                      transition-all duration-200 ease-in-out
-                      hover:shadow-md hover:scale-[1.01]
-                      ${
-                        block.id === selectedBlockId
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 '
-                      }
-                    `}
-                    onClick={() => selectBlock(block.id)}
-                  >
-                    <div className="flex-1">
-                      <BlockRenderer block={block} updateBlock={updateBlock} />
-                    </div>
-
-                    <DeleteIcon
-                      onClick={() => deleteBlock(quiz!.id, block.id)}
-                      className="ml-3 text-red-500 cursor-pointer hover:text-red-700 active:scale-95 transition"
-                    />
-                  </div>
-                )}
-              </Draggable>
+              <DraggableItem block={block} index={i} quizId={quiz!.id} key={block.id} />
             ))}
 
             {provided.placeholder}
