@@ -50,7 +50,6 @@ export default function QuizEditorPage() {
       const [moved] = reordered.splice(source.index, 1);
       reordered.splice(destination.index, 0, moved);
 
-      // Just update selectedQuiz in store
       useQuizStore.setState({
         selectedQuiz: { ...selectedQuiz, blocks: reordered },
       });
