@@ -3,8 +3,6 @@ import { useEffect } from 'react';
 import { useQuizStore } from '../store/useQuizStore';
 import QuizTable from './quiz/QuizTable';
 import QuizsEmptyMessage from './quiz/QuizsEmptyMessage';
-import { Button } from '@mui/material';
-import { useRouter } from 'next/navigation';
 
 const Home = () => {
   const quizzes = useQuizStore((s) => s.quizzes);
