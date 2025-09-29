@@ -1,14 +1,19 @@
 export enum BlockEnum {
-  HEADING = 'heading',
-  QUESTION = 'question',
-  BUTTON = 'button',
-  FOOTER = 'footer',
+  HEADING = 'HEADING',
+  QUESTION = 'QUESTION',
+  BUTTON = 'BUTTON',
+  FOOTER = 'FOOTER',
 }
 
 export enum QuestionKindEnum {
-  SINGLE = 'single',
-  MULTI = 'multi',
-  TEXT = 'text',
+  SINGLE = 'SINGLE',
+  MULTI = 'MULTI',
+  TEXT = 'TEXT',
+}
+
+export enum DroppableAreaEnum {
+  SIDEBAR = 'SIDEBAR',
+  CANVAS = 'CANVAS',
 }
 
 export interface QuestionOption {

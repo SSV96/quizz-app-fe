@@ -1,9 +1,9 @@
 import { Draggable } from '@hello-pangea/dnd';
 import React, { FC } from 'react';
-import BlockRenderer from './BlockRenderer';
-import { Block } from '../types/block';
+import BlockRenderer from '../BlockRenderer';
+import { Block } from '../../types';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useQuizStore } from '../store/useCanvasStore';
+import { useQuizStore } from '../../store/useQuizStore';
 import cx from 'classnames';
 
 interface DraggableItemProps {

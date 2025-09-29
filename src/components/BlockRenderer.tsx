@@ -1,9 +1,10 @@
 import React from 'react';
-import { Block, BlockEnum } from '../types/block';
+import { Block, BlockEnum } from '../types';
+import { TextField, Button } from '@mui/material';
 
 interface BlockRendererProps {
   block: Block;
-  updateBlock: (id: string, properties: any) => void;
+  updateBlock: (id: string, properties: Partial<Block['properties']>) => void;
 }
 
 const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => {
@@ -22,28 +23,36 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => 
 
   if (block.type === BlockEnum.HEADING || block.type === BlockEnum.FOOTER) {
     return (
-      <input
-        type="text"
+      <TextField
+        fullWidth
+        variant="outlined"
+        size="small"
         value={block.properties.text || ''}
         onChange={handleChange}
-        className="border px-3 py-2 rounded w-full text-gray-800"
+        label={block.type === BlockEnum.HEADING ? 'Heading' : 'Footer'}
       />
     );
   }
 
   if (block.type === BlockEnum.QUESTION) {
     return (
-      <input
-        type="text"
+      <TextField
+        fullWidth
+        variant="outlined"
+        size="small"
         value={block.properties.question?.text || ''}
         onChange={handleChange}
-        className="border px-3 py-2 rounded w-full text-gray-800"
+        label="Question"
       />
     );
   }
 
   if (block.type === BlockEnum.BUTTON) {
-    return <span className="text-gray-800 font-medium">{block.properties.text}</span>;
+    return (
+      <Button variant="contained" color="primary" disabled>
+        {block.properties.text}
+      </Button>
+    );
   }
 
   return null;

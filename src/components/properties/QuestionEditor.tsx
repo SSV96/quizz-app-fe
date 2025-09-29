@@ -1,11 +1,12 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { BlockEnum, QuestionKindEnum } from '../../types/block';
-import { useQuizStore } from '../../store/useCanvasStore';
+import { Block, BlockEnum, QuestionKindEnum } from '../../types';
+import { useQuizStore } from '../../store/useQuizStore';
 import { TextAnswerEditor } from './TextAnswerEditor';
 import { QuestionOptionsEditor } from './QuestionOptionsEditor';
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
-export const QuestionEditor = ({ block }: { block: any }) => {
+export const QuestionEditor = ({ block }: { block: Block }) => {
   const updateBlock = useQuizStore((s) => s.updateBlock);
   const [localQuestion, setLocalQuestion] = useState(block?.properties.question);
 
@@ -26,6 +27,18 @@ export const QuestionEditor = ({ block }: { block: any }) => {
 
   if (!localQuestion) return null;
 
+  const localQuestionKind = localQuestion.kind ?? QuestionKindEnum.SINGLE;
+
+  const handleKindChange = (e: SelectChangeEvent) => {
+    setLocalQuestion({
+      ...localQuestion,
+      kind: e.target.value as QuestionKindEnum,
+      correctOptionIds: [],
+    });
+  };
+
+  const isTextQuestion = localQuestionKind === QuestionKindEnum.TEXT;
+
   return (
     <>
       <h3 className="font-bold mb-3">Edit Question</h3>
@@ -33,27 +46,24 @@ export const QuestionEditor = ({ block }: { block: any }) => {
         {localQuestion.text || 'Untitled Question'}
       </p>
 
-      <label className="block mb-1 font-medium">Question Type</label>
-      <select
-        value={localQuestion.kind || QuestionKindEnum.SINGLE}
-        onChange={(e) =>
-          setLocalQuestion({
-            ...localQuestion,
-            kind: e.target.value as QuestionKindEnum,
-            correctOptionIds: [],
-          })
-        }
-        className="w-full border px-3 py-2 rounded mb-3"
-      >
-        <option value="single">Single Choice</option>
-        <option value="multi">Multiple Choice</option>
-        <option value="text">Text Answer</option>
-      </select>
+      <FormControl fullWidth margin="normal" size="small">
+        <InputLabel id="question-kind-label">Question Type</InputLabel>
+        <Select
+          labelId="question-kind-label"
+          value={localQuestionKind}
+          onChange={handleKindChange}
+          label="Question Type"
+        >
+          <MenuItem value={QuestionKindEnum.SINGLE}>Single Choice</MenuItem>
+          <MenuItem value={QuestionKindEnum.MULTI}>Multiple Choice</MenuItem>
+          <MenuItem value={QuestionKindEnum.TEXT}>Text Answer</MenuItem>
+        </Select>
+      </FormControl>
 
-      {localQuestion.kind !== QuestionKindEnum.TEXT ? (
-        <QuestionOptionsEditor localQuestion={localQuestion} setLocalQuestion={setLocalQuestion} />
-      ) : (
+      {isTextQuestion ? (
         <TextAnswerEditor localQuestion={localQuestion} setLocalQuestion={setLocalQuestion} />
+      ) : (
+        <QuestionOptionsEditor localQuestion={localQuestion} setLocalQuestion={setLocalQuestion} />
       )}
     </>
   );

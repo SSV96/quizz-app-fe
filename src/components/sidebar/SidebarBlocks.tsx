@@ -1,7 +1,7 @@
 'use client';
 import React, { FC } from 'react';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
-import { BlockEnum } from '../types/block';
+import { BlockEnum } from '../../types';
 
 const palette = [
   { type: BlockEnum.HEADING, label: 'Heading' },
@@ -12,8 +12,13 @@ const palette = [
 
 export const SidebarBlocks: FC = () => {
   return (
-    <div style={{ width: 240 }} className="border-r p-4 bg-gray-50 transition-colors">
-      <h3 className="font-bold mb-4 text-gray-700">Building blocks</h3>
+    <div style={{ width: 240 }} className="bg-gray-100 border-rounded-md  p-4 transition-colors">
+      <h3
+        className="font-bold mb-4 
+      text-gray-700"
+      >
+        Building blocks
+      </h3>
 
       <Droppable droppableId="SIDEBAR" isDropDisabled>
         {(provided) => (

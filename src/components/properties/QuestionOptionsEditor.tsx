@@ -1,45 +1,48 @@
 'use client';
-import React from 'react';
+import React, { FC } from 'react';
 import { Delete } from '@mui/icons-material';
-import { QuestionKindEnum } from '../../types/block';
+import { Button, TextField, IconButton, Radio, Checkbox, Stack } from '@mui/material';
+import { QuestionKindEnum, QuestionOption, QuestionPayload } from '../../types';
 
-export const QuestionOptionsEditor = ({
+interface QuestionOptionsEditorProps {
+  localQuestion: QuestionPayload;
+  setLocalQuestion: React.Dispatch<React.SetStateAction<QuestionPayload | undefined>>;
+}
+
+export const QuestionOptionsEditor: FC<QuestionOptionsEditorProps> = ({
   localQuestion,
   setLocalQuestion,
-}: {
-  localQuestion: any;
-  setLocalQuestion: (fn: any) => void;
 }) => {
   const handleDeleteOption = (optionId: string) => {
     setLocalQuestion({
       ...localQuestion,
-      options: localQuestion.options?.filter((o: any) => o.id !== optionId),
-      correctOptionIds: localQuestion.correctOptionIds?.filter((id: string) => id !== optionId),
+      options: localQuestion.options?.filter((o) => o.id !== optionId),
+      correctOptionIds: localQuestion.correctOptionIds?.filter((id) => id !== optionId),
     });
   };
 
   return (
     <>
-      <h4 className="font-semibold mb-2">Options</h4>
-      {localQuestion.options?.map((opt: any) => (
-        <div key={opt.id} className="flex items-center gap-2 mb-2">
-          <input
-            type="text"
+      <h4 style={{ fontWeight: 600, marginBottom: 8 }}>Options</h4>
+
+      {localQuestion.options?.map((opt: QuestionOption) => (
+        <Stack key={opt.id} direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
+          <TextField
+            fullWidth
+            size="small"
             value={opt.text}
             onChange={(e) =>
               setLocalQuestion({
                 ...localQuestion,
-                options: localQuestion.options?.map((o: any) =>
+                options: localQuestion.options?.map((o) =>
                   o.id === opt.id ? { ...o, text: e.target.value } : o,
                 ),
               })
             }
-            className="flex-1 border px-3 py-1 rounded"
           />
+
           {localQuestion.kind === QuestionKindEnum.SINGLE ? (
-            <input
-              type="radio"
-              name="correct"
+            <Radio
               checked={localQuestion.correctOptionIds?.[0] === opt.id}
               onChange={() =>
                 setLocalQuestion({
@@ -49,8 +52,7 @@ export const QuestionOptionsEditor = ({
               }
             />
           ) : (
-            <input
-              type="checkbox"
+            <Checkbox
               checked={localQuestion.correctOptionIds?.includes(opt.id)}
               onChange={(e) => {
                 const checked = e.target.checked;
@@ -58,22 +60,23 @@ export const QuestionOptionsEditor = ({
                   ...localQuestion,
                   correctOptionIds: checked
                     ? [...(localQuestion.correctOptionIds || []), opt.id]
-                    : localQuestion.correctOptionIds?.filter((id: string) => id !== opt.id),
+                    : localQuestion.correctOptionIds?.filter((id) => id !== opt.id),
                 });
               }}
             />
           )}
-          <button
-            onClick={() => handleDeleteOption(opt.id)}
-            className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-          >
+
+          <IconButton color="error" onClick={() => handleDeleteOption(opt.id)} size="small">
             <Delete />
-          </button>
-        </div>
+          </IconButton>
+        </Stack>
       ))}
 
-      <button
-        className="mt-2 px-4 py-2 bg-green-600 text-white rounded"
+      <Button
+        variant="contained"
+        color="success"
+        size="small"
+        sx={{ mt: 1 }}
         onClick={() => {
           const optionCount = localQuestion?.options?.length ?? 0;
           setLocalQuestion({
@@ -89,7 +92,7 @@ export const QuestionOptionsEditor = ({
         }}
       >
         + Add Option
-      </button>
+      </Button>
     </>
   );
 };
