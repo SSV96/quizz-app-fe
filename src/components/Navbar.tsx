@@ -1,26 +1,32 @@
 'use client';
-'use client';
 import React from 'react';
-
 import { Button } from '@mui/material';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { SavePublishPanel } from './SavePublishPanel';
+import { Quiz } from '@/src/types';
 
-const Navbar = () => {
+interface NavbarProps {
+  isHome: boolean;
+  quiz?: Quiz;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ isHome, quiz }) => {
   const router = useRouter();
-  const pathname = usePathname();
 
   const handleCreateQuiz = () => {
     router.push(`/quiz/edit`);
   };
 
   return (
-    <nav className="flex space-x-8 items-center">
-      {pathname === '/' && (
-        <Button className="!bg-green-500 !text-white" onClick={handleCreateQuiz}>
+    <div>
+      {isHome ? (
+        <Button className="!bg-teal-700 !text-white" onClick={handleCreateQuiz}>
           Create Quiz
         </Button>
+      ) : (
+        <SavePublishPanel quiz={quiz} />
       )}
-    </nav>
+    </div>
   );
 };
 

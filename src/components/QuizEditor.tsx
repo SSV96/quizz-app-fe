@@ -23,7 +23,9 @@ export default function QuizEditorPage() {
     if (quizId) setSelectedQuiz(quizId);
   }, [quizId, setSelectedQuiz]);
 
-  if (!selectedQuiz) return <div className="p-6 text-red-500">Quiz not found!</div>;
+  if (!selectedQuiz) {
+    return <div className="p-6 text-red-500">Quiz not found!</div>;
+  }
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
