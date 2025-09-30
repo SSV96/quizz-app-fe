@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCreateQuiz } from '@/src/hooks/useQuizzes';
 import { IQuiz } from '@/src/types';
+import { LoaderIcon } from 'react-hot-toast';
 
 const CreateQuizPage = () => {
   const router = useRouter();
@@ -21,7 +22,12 @@ const CreateQuizPage = () => {
   }
 
   if (isPending) {
-    return <p className=""> Creating new quiz...</p>;
+    return (
+      <div>
+        <span>Creating Quiz...</span>
+        <LoaderIcon />
+      </div>
+    );
   }
 
   return null;

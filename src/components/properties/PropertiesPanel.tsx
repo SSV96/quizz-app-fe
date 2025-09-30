@@ -8,7 +8,7 @@ import ButtonProperties from './ButtonProperties';
 export const PropertiesPanel = () => {
   const selectedQuiz = useQuizStore((s) => s.selectedQuiz);
   const selectedBlockId = useQuizStore((s) => s.selectedBlockId);
-  const block = selectedQuiz?.blocks.find((b) => b.id === selectedBlockId);
+  const block = (selectedQuiz?.blocks ?? []).find((b) => b?.id === selectedBlockId);
 
   if (!block) {
     return (
