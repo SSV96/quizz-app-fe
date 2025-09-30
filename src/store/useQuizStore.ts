@@ -15,6 +15,8 @@ interface QuizStore {
   updateBlock: (blockId: string, properties: Partial<TQuizBlock['properties']>) => void;
   deleteBlock: (blockId: string) => void;
 
+  reorderBlocks: (blocks: TQuizBlock[]) => void;
+
   saveQuizToBE: (updateQuizFn: (quiz: IQuiz) => void) => void;
 }
 
@@ -35,10 +37,25 @@ export const useQuizStore = create<QuizStore>()(
 
       setSelectedBlock: (id) => set({ selectedBlockId: id }),
 
+      reorderBlocks: (blocks: TQuizBlock[]) => {
+        set((state) => ({
+          selectedQuiz: state.selectedQuiz
+            ? {
+                ...state.selectedQuiz,
+                blocks: blocks.map((b, i) => ({
+                  ...b,
+                  order: i,
+                  isUpdated: !b.isNew ? true : b.isUpdated,
+                })),
+              }
+            : null,
+        }));
+      },
+
       addBlock: (type, index) => {
         const selectedQuiz = get().selectedQuiz;
         if (!selectedQuiz) return;
-
+        const order = index ?? selectedQuiz.blocks.length;
         const newBlock: TQuizBlock =
           type === BlockEnum.QUESTION
             ? {
@@ -53,6 +70,7 @@ export const useQuizStore = create<QuizStore>()(
                   ],
                   correctOptionIds: [],
                 },
+                order,
                 isDeleted: false,
                 isNew: true,
                 isUpdated: false,
@@ -66,6 +84,7 @@ export const useQuizStore = create<QuizStore>()(
                     nextLabel: 'Next',
                     submitLabel: 'Submit',
                   },
+                  order,
                   isDeleted: false,
                   isNew: true,
                   isUpdated: false,
@@ -73,6 +92,7 @@ export const useQuizStore = create<QuizStore>()(
               : {
                   id: nanoid(),
                   type,
+                  order,
                   properties: {},
                   isDeleted: false,
                   isNew: true,
@@ -116,10 +136,18 @@ export const useQuizStore = create<QuizStore>()(
           b.id === blockId ? { ...b, isDeleted: true, isNew: false } : b,
         );
 
+        let orderCounter = 1;
+        const reorderedBlocks = updatedBlocks.map((b) => {
+          if (!b.isDeleted) {
+            return { ...b, order: orderCounter++ };
+          }
+          return b;
+        });
+
         const selectedBlockId = get().selectedBlockId === blockId ? null : get().selectedBlockId;
 
         set({
-          selectedQuiz: { ...selectedQuiz, blocks: updatedBlocks },
+          selectedQuiz: { ...selectedQuiz, blocks: reorderedBlocks },
           selectedBlockId,
         });
       },
@@ -144,6 +172,7 @@ export const useQuizStore = create<QuizStore>()(
         set({ selectedQuiz: { ...selectedQuiz, blocks: updatedBlocks } });
       },
     }),
+
     { name: 'selected-quiz-storage' },
   ),
 );
