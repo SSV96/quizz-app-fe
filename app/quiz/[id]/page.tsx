@@ -1,56 +1,83 @@
 'use client';
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useParams } from 'next/navigation';
-import { BlockEnum, QuestionKindEnum } from '@/src/types';
-import { useQuizStore } from '@/src/store/useQuizStore';
+import {
+  BlockEnum,
+  IButtonBlock,
+  ITextBlock,
+  IQuestionBlock,
+  QuestionKindEnum,
+  TQuizBlock,
+} from '@/src/types';
 import { useQuizAnswerStore } from '@/src/store/useAnswerStore';
 import QuizNotFound from '@/src/components/quiz/QuizNotFound';
 import QuizNotPublished from '@/src/components/quiz/QuizNotPublished';
 import QuizSubmitted from '@/src/components/quiz/QuizSubmitted';
 import { QuizNavigation } from '@/src/components/quiz/QuizNavigation';
-import { QuestionBlock } from '@/src/components/QuestionBlock';
+import { QuestionPreviewBlock } from '@/src/components/QuestionBlock';
+import { useQuiz } from '@/src/hooks/useQuizzes';
 
 export default function QuizPreview() {
   const params = useParams();
   const quizId = params?.id as string;
 
-  const quizzes = useQuizStore((s) => s.quizzes);
-  const loadQuizzes = useQuizStore((s) => s.loadQuizzes);
+  const { data: quiz, isLoading, isError } = useQuiz(quizId);
   const { answers, resetAnswers } = useQuizAnswerStore();
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [score, setScore] = useState(0);
 
-  const quiz = quizzes.find((q) => q.id === quizId);
-
   useEffect(() => {
-    if (quizzes.length === 0) loadQuizzes();
     resetAnswers();
-  }, [quizzes.length, loadQuizzes, resetAnswers]);
+    setCurrentIndex(0);
+    setIsSubmitted(false);
+    setScore(0);
+  }, [quiz?.id, resetAnswers]);
 
-  if (!quiz) {
-    return <QuizNotFound />;
-  }
-  if (!quiz.published) {
-    return <QuizNotPublished id={quizId} />;
-  }
+  const isQuestionBlock = (b: TQuizBlock): b is IQuestionBlock => b.type === BlockEnum.QUESTION;
 
-  const blocks = quiz.blocks.filter((b) => b.type === BlockEnum.QUESTION);
-  const currentBlock = blocks[currentIndex];
+  const isButtonBlock = (b: TQuizBlock): b is IButtonBlock => b.type === BlockEnum.BUTTON;
+
+  const { questionBlocks, headerBlock, footerBlock, buttonBlock } = useMemo(() => {
+    const acc: {
+      questionBlocks: IQuestionBlock[];
+      headerBlock?: ITextBlock;
+      footerBlock?: ITextBlock;
+      buttonBlock?: IButtonBlock;
+    } = { questionBlocks: [] };
+
+    quiz?.blocks.forEach((block: TQuizBlock) => {
+      if (isQuestionBlock(block)) {
+        acc.questionBlocks.push(block);
+      } else if (block.type === BlockEnum.HEADING) {
+        acc.headerBlock ??= block as ITextBlock;
+      } else if (block.type === BlockEnum.FOOTER) {
+        acc.footerBlock ??= block as ITextBlock;
+      } else if (isButtonBlock(block)) {
+        acc.buttonBlock ??= block;
+      }
+    });
+
+    return acc;
+  }, [quiz?.blocks]);
+
+  const currentBlock = useMemo(() => questionBlocks[currentIndex], [questionBlocks, currentIndex]);
 
   const handleSubmit = useCallback(() => {
     let correct = 0;
 
-    blocks.forEach((block) => {
+    questionBlocks.forEach((block) => {
       const userAnswer = answers[block.id];
-      const q = block.properties.question;
+      const q = block.properties;
       const correctIds = q?.correctOptionIds || [];
 
       switch (q?.kind) {
         case QuestionKindEnum.TEXT:
-          const correctText = q.textAnswer?.trim().toLowerCase();
-          if (typeof userAnswer === 'string' && userAnswer.trim().toLowerCase() === correctText) {
+          if (
+            typeof userAnswer === 'string' &&
+            userAnswer.trim().toLowerCase() === q.textAnswer?.trim().toLowerCase()
+          ) {
             correct++;
           }
           break;
@@ -76,13 +103,13 @@ export default function QuizPreview() {
 
     setScore(correct);
     setIsSubmitted(true);
-  }, [answers, blocks]);
+  }, [answers, questionBlocks]);
 
   if (isSubmitted) {
     return (
       <QuizSubmitted
         score={score}
-        totalQuestions={blocks.length}
+        totalQuestions={questionBlocks.length}
         setCurrentIndex={setCurrentIndex}
         resetAnswers={resetAnswers}
         setIsSubmitted={setIsSubmitted}
@@ -91,7 +118,23 @@ export default function QuizPreview() {
     );
   }
 
-  const hasQuestions = blocks.length > 0 && !!currentBlock;
+  if (isLoading) {
+    return <div className="p-6 text-center">Loading quiz...</div>;
+  }
+
+  if (isError) {
+    return <div className="p-6 text-center text-red-500">Failed to load quiz</div>;
+  }
+
+  if (!quiz) {
+    return <QuizNotFound />;
+  }
+
+  if (!quiz.published) {
+    return <QuizNotPublished id={quizId} />;
+  }
+
+  const hasQuestions = questionBlocks.length > 0;
 
   return (
     <div className="max-w-3xl mx-auto p-6">
@@ -99,14 +142,23 @@ export default function QuizPreview() {
 
       {hasQuestions ? (
         <>
-          <QuestionBlock block={currentBlock} index={currentIndex} />
+          {headerBlock?.properties.text && (
+            <p className="mb-4">{headerBlock.properties.text || 'Lets Play Quiz'}</p>
+          )}
+
+          <QuestionPreviewBlock block={currentBlock} index={currentIndex} />
           <QuizNavigation
+            properties={buttonBlock?.properties}
             currentIndex={currentIndex}
-            total={blocks.length}
+            total={questionBlocks.length}
             onPrev={() => setCurrentIndex((i) => Math.max(0, i - 1))}
-            onNext={() => setCurrentIndex((i) => Math.min(blocks.length - 1, i + 1))}
+            onNext={() => setCurrentIndex((i) => Math.min(questionBlocks.length - 1, i + 1))}
             onSubmit={handleSubmit}
           />
+
+          {footerBlock?.properties.text && (
+            <p className="mt-4">{footerBlock.properties.text || 'Quizz App is Best'}</p>
+          )}
         </>
       ) : (
         <p className="text-gray-500 text-center">No questions available.</p>

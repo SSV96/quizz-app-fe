@@ -1,21 +1,14 @@
 'use client';
-import { useEffect, FC } from 'react';
+import { FC } from 'react';
 import { Table, TableHead, TableRow, TableCell, TableBody } from '@mui/material';
-import { useQuizStore } from '../../store/useQuizStore';
-import { Quiz } from '../../types';
+import { IQuizSummary } from '../../types';
 import QuizTableRow from './QuizTableRow';
 
 interface QuizTableProps {
-  quizzes: Quiz[];
+  quizzes: IQuizSummary[];
 }
 
 const QuizTable: FC<QuizTableProps> = ({ quizzes }) => {
-  const loadQuizzes = useQuizStore((s) => s.loadQuizzes);
-
-  useEffect(() => {
-    loadQuizzes();
-  }, [loadQuizzes]);
-
   return (
     <Table>
       <TableHead>
@@ -26,7 +19,6 @@ const QuizTable: FC<QuizTableProps> = ({ quizzes }) => {
           <TableCell className="font-bold text-right">Actions</TableCell>
         </TableRow>
       </TableHead>
-
       <TableBody>
         <QuizTableRow quizzes={quizzes} />
       </TableBody>

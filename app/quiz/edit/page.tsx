@@ -1,34 +1,30 @@
 'use client';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useQuizStore } from '@/src/store/useQuizStore';
-import { demoQuiz } from '@/src/utils/demo-quiz';
-import { Block } from '@/src/types';
-import { nanoid } from 'nanoid';
+import { useCreateQuiz } from '@/src/hooks/useQuizzes';
+import { IQuiz } from '@/src/types';
 
 const CreateQuizPage = () => {
-  const createQuiz = useQuizStore((s) => s.createQuiz);
   const router = useRouter();
+  const redirectToQuizEditor = (quiz: IQuiz) => {
+    router.replace(`/quiz/edit/${quiz.id}`);
+  };
+
+  const { isError, isPending, mutate } = useCreateQuiz(redirectToQuizEditor);
 
   useEffect(() => {
-    const quiz = createQuiz('New Quiz');
+    mutate({ title: 'New Quiz' });
+  }, [mutate]);
 
-    const defaultBlocks: Block[] = demoQuiz[0].blocks.map((b) => ({
-      ...b,
-      id: nanoid(),
-      properties: { ...b.properties },
-    }));
-    quiz.blocks = defaultBlocks;
+  if (isError) {
+    return <p className="text-red-500">Something went Wrong </p>;
+  }
 
-    useQuizStore.setState({
-      quizzes: [...useQuizStore.getState().quizzes],
-    });
-    localStorage.setItem('quizzes', JSON.stringify(useQuizStore.getState().quizzes));
+  if (isPending) {
+    return <p className=""> Creating new quiz...</p>;
+  }
 
-    router.replace(`/quiz/edit/${quiz.id}`);
-  }, []);
-
-  return <div className="p-6 text-gray-700">Creating new quiz...</div>;
+  return null;
 };
 
 export default CreateQuizPage;

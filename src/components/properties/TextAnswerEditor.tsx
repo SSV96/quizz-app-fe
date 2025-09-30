@@ -1,14 +1,16 @@
 'use client';
-import { QuestionPayload } from '@/src/types';
-import React from 'react';
+import { IQuestionBlock } from '@/src/types';
+import React, { ChangeEventHandler, FC } from 'react';
 import { TextField } from '@mui/material';
 
-export const TextAnswerEditor = ({
-  localQuestion,
-  setLocalQuestion,
-}: {
-  localQuestion: QuestionPayload;
-  setLocalQuestion: React.Dispatch<React.SetStateAction<QuestionPayload | undefined>>;
+interface ITextAnswerEditorProps {
+  selectedQuestion: IQuestionBlock;
+  onTextAnswerChange: ChangeEventHandler<HTMLInputElement>;
+}
+
+export const TextAnswerEditor: FC<ITextAnswerEditorProps> = ({
+  selectedQuestion,
+  onTextAnswerChange,
 }) => {
   return (
     <TextField
@@ -16,13 +18,8 @@ export const TextAnswerEditor = ({
       size="small"
       label="Answer"
       variant="outlined"
-      value={localQuestion.textAnswer ?? ''}
-      onChange={(e) =>
-        setLocalQuestion({
-          ...localQuestion,
-          textAnswer: e.target.value,
-        })
-      }
+      value={selectedQuestion.properties.textAnswer ?? ''}
+      onChange={onTextAnswerChange}
     />
   );
 };
