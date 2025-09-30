@@ -36,6 +36,7 @@ export interface IQuestionProperties {
 
 export interface IQuestionBlock extends UpdateFlags {
   id: string;
+  order: number;
   type: BlockEnum.QUESTION;
   properties: IQuestionProperties;
 }
@@ -46,6 +47,7 @@ export interface ITextBlockProperties {
 
 export interface ITextBlock extends UpdateFlags {
   id: string;
+  order: number;
   type: BlockEnum.HEADING | BlockEnum.FOOTER;
   properties: ITextBlockProperties;
 }
@@ -58,12 +60,14 @@ export interface IButtonBlockProperties {
 
 export interface IButtonBlock extends UpdateFlags {
   id: string;
+  order: number;
   type: BlockEnum.BUTTON;
   properties: IButtonBlockProperties;
 }
 
 export interface IUnknownBlock {
   id: string;
+  order: number;
   type: BlockEnum;
   properties: Record<string, unknown>;
   isNew?: boolean;

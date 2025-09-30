@@ -12,7 +12,7 @@ interface SavePublishPanelProps {
 
 export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }) => {
   const { mutate } = useUpdateQuiz();
-  const { mutate: publishQuizMutation } = usePublishedQuiz();
+  const { mutate: publishQuizMutation, isPending } = usePublishedQuiz();
 
   if (!quiz) return null;
 
@@ -51,7 +51,7 @@ export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }) => {
           onClick={handleSave}
           className="!rounded-md !px-2 !py-3 shadow-lg"
         >
-          Save Quiz
+          {isPending ? 'Saving...' : 'Save Quiz'}
         </Button>
       </Zoom>
     </div>
