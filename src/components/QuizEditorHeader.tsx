@@ -23,7 +23,7 @@ const QuizEditorHeader: FC = () => {
         onChange={(e) => handleTitleChange(e.target.value)}
         sx={{ width: 256 }}
       />
-      <SavePublishPanel quiz={selectedQuiz || {}} />
+      {selectedQuiz && <SavePublishPanel quiz={selectedQuiz} />}
     </nav>
   );
 };

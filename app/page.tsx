@@ -2,19 +2,21 @@
 import QuizsEmptyMessage from '@/src/components/quiz/QuizsEmptyMessage';
 import QuizTable from '@/src/components/quiz/QuizTable';
 import { useQuizzes } from '@/src/hooks/useQuizzes';
+import { Error } from '@mui/icons-material';
+import { LoaderIcon } from 'react-hot-toast';
 
 const Page = () => {
-  const { data, isLoading, isError } = useQuizzes();
+  const { data, isSuccess, isPending, isError } = useQuizzes();
 
   const isQuizzesExist = !!data && data.length > 0;
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      {isLoading && <div>Loading quizzes...</div>}
+      {isPending && <LoaderIcon />}
 
-      {isError && <div>Failed to load quizzes.</div>}
+      {isError && <Error />}
 
-      {isQuizzesExist ? <QuizTable quizzes={data} /> : <QuizsEmptyMessage />}
+      {isSuccess && <>{isQuizzesExist ? <QuizTable quizzes={data} /> : <QuizsEmptyMessage />}</>}
     </div>
   );
 };
