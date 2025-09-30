@@ -7,7 +7,6 @@ import { useQuizStore } from '@/src/store/useQuizStore';
 
 export default function Canvas() {
   const selectedQuiz = useQuizStore((s) => s.selectedQuiz);
-
   return (
     <div className="flex-1 p-6 bg-gray-50 transition-colors">
       <h3 className="font-bold mb-4 text-gray-700">Canvas</h3>
