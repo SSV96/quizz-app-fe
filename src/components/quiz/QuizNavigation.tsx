@@ -1,32 +1,40 @@
 'use client';
-import React from 'react';
+import React, { FC } from 'react';
 import { Button } from '@mui/material';
-export const QuizNavigation = ({
+import { IButtonBlock } from '@/src/types';
+
+interface QuizNavigationProps {
+  properties?: IButtonBlock['properties'];
+  currentIndex: number;
+  total: number;
+  onPrev: VoidFunction;
+  onNext: VoidFunction;
+  onSubmit: VoidFunction;
+}
+
+export const QuizNavigation: FC<QuizNavigationProps> = ({
   currentIndex,
   total,
   onPrev,
   onNext,
   onSubmit,
-}: {
-  currentIndex: number;
-  total: number;
-  onPrev: () => void;
-  onNext: () => void;
-  onSubmit: () => void;
+  properties,
 }) => {
+  const { previousLabel, nextLabel, submitLabel } = properties ?? {};
+
   return (
     <div className="flex justify-between mt-6">
       <Button disabled={currentIndex === 0} onClick={onPrev} variant="contained">
-        Previous
+        {previousLabel ?? 'Previous'}
       </Button>
 
       {currentIndex === total - 1 ? (
         <Button onClick={onSubmit} variant="contained" color="success">
-          Submit Quiz
+          {submitLabel ?? 'Submit'}
         </Button>
       ) : (
         <Button onClick={onNext} variant="contained">
-          Next
+          {nextLabel ?? 'Next'}
         </Button>
       )}
     </div>

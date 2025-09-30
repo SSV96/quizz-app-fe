@@ -1,20 +1,26 @@
-import React, { FC } from 'react';
+'use client';
+import { FC } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import dayjs from 'dayjs';
 import Link from 'next/link';
-import { Quiz } from '../../types';
+import { IQuizSummary } from '../../types';
 import { TableCell, Tooltip, IconButton } from '@mui/material';
 import { motion } from 'framer-motion';
-import { useQuizStore } from '../../store/useQuizStore';
-import clsx from 'classnames';
+import cn from 'classnames';
+import { useDeleteQuiz } from '@/src/hooks/useQuizzes';
+
 interface QuizTableRowProps {
-  quizzes: Quiz[];
+  quizzes: IQuizSummary[];
 }
 
 const QuizTableRow: FC<QuizTableRowProps> = ({ quizzes }) => {
-  const deleteQuiz = useQuizStore((s) => s.deleteQuiz);
+  const { mutateAsync } = useDeleteQuiz();
+
+  const handleDeleteQuiz = async (id: string) => {
+    await mutateAsync(id);
+  };
 
   return quizzes.map((quiz, index) => (
     <motion.tr
@@ -32,7 +38,7 @@ const QuizTableRow: FC<QuizTableRowProps> = ({ quizzes }) => {
 
       <TableCell>
         <span
-          className={clsx(
+          className={cn(
             'px-3 py-1 rounded-full text-sm font-medium',
             quiz.published ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600',
           )}
@@ -60,7 +66,7 @@ const QuizTableRow: FC<QuizTableRowProps> = ({ quizzes }) => {
           </Tooltip>
 
           <Tooltip title="Delete Quiz">
-            <IconButton color="error" onClick={() => deleteQuiz(quiz.id)}>
+            <IconButton color="error" onClick={() => handleDeleteQuiz(quiz.id)}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>

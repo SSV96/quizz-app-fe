@@ -11,42 +11,83 @@ export enum QuestionKindEnum {
   TEXT = 'TEXT',
 }
 
+export enum QuizStatus {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+}
+
 export enum DroppableAreaEnum {
   SIDEBAR = 'SIDEBAR',
   CANVAS = 'CANVAS',
 }
 
-export interface QuestionOption {
+export interface IQuestionOption {
   id: string;
   text: string;
 }
 
-export interface QuestionPayload {
-  id?: string;
+export interface IQuestionProperties {
+  title?: string;
   kind?: QuestionKindEnum;
-  text: string;
   textAnswer?: string;
-  options?: QuestionOption[];
+  options?: IQuestionOption[];
   correctOptionIds?: string[];
 }
 
-export interface Block {
+export interface IQuestionBlock extends UpdateFlags {
   id: string;
-  type: BlockEnum;
-  properties: {
-    text?: string;
-    question?: QuestionPayload;
-    style?: Record<string, string | number>;
-    options?: QuestionOption[];
-  };
+  type: BlockEnum.QUESTION;
+  properties: IQuestionProperties;
 }
 
-export interface Quiz {
+export interface ITextBlockProperties {
+  text?: string;
+}
+
+export interface ITextBlock extends UpdateFlags {
+  id: string;
+  type: BlockEnum.HEADING | BlockEnum.FOOTER;
+  properties: ITextBlockProperties;
+}
+
+export interface IButtonBlockProperties {
+  nextLabel: string;
+  previousLabel: string;
+  submitLabel: string;
+}
+
+export interface IButtonBlock extends UpdateFlags {
+  id: string;
+  type: BlockEnum.BUTTON;
+  properties: IButtonBlockProperties;
+}
+
+export interface IUnknownBlock {
+  id: string;
+  type: BlockEnum;
+  properties: Record<string, unknown>;
+  isNew?: boolean;
+  isUpdated?: boolean;
+  isDeleted?: boolean;
+}
+
+export interface UpdateFlags {
+  isNew?: boolean;
+  isUpdated?: boolean;
+  isDeleted?: boolean;
+}
+
+export type TQuizBlock = IQuestionBlock | ITextBlock | IButtonBlock | IUnknownBlock;
+
+export interface IQuizSummary {
   id: string;
   title: string;
-  blocks: Block[];
   published: boolean;
-  createdAt: string;
   updatedAt: string;
-  publishedAt?: string | null;
+}
+
+export interface IQuiz extends IQuizSummary {
+  blocks: TQuizBlock[];
+  published: boolean;
+  updatedAt: string;
 }

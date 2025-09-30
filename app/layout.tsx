@@ -4,6 +4,7 @@ import './globals.css';
 import Toast from '@/src/ui/Toast';
 import Header from '@/src/components/Header';
 
+import ReactQueryProvider from '@/src/provider/ReactQueryProvider';
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
@@ -29,8 +30,10 @@ export default function RootLayout({
       <body
         className={`bg-gray-50 text-gray-900 min-h-screen   ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
-        <main className="max-w-7xl mx-auto px-6 py-6">{children}</main>
+        <ReactQueryProvider>
+          <Header />
+          <main className="max-w-7xl mx-auto px-6 py-6">{children}</main>
+        </ReactQueryProvider>
         <Toast />
       </body>
     </html>

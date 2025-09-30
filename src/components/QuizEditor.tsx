@@ -7,38 +7,38 @@ import Canvas from '@/src/components/canvas/Canvas';
 import PropertiesPanel from '@/src/components/properties/PropertiesPanel';
 import { useQuizStore } from '@/src/store/useQuizStore';
 import { DroppableAreaEnum, BlockEnum } from '@/src/types';
-import { LocalStorage } from '@/src/utils/localstorage';
+import { useQuiz } from '../hooks/useQuizzes';
 
 export default function QuizEditorPage() {
   const params = useParams();
   const quizId = params?.id as string;
 
-  const quizzes = useQuizStore((s) => s.quizzes);
-  const selectedQuiz = quizzes.find((q) => q.id === quizId);
+  const { data: quiz, isSuccess, isLoading, isError } = useQuiz(quizId);
 
+  const loadCurrentQuiz = useQuizStore((s) => s.loadCurrentQuiz);
   const addBlock = useQuizStore((s) => s.addBlock);
-  const setSelectedQuiz = useQuizStore((s) => s.setSelectedQuiz);
+  const selectedQuiz = useQuizStore((s) => s.selectedQuiz);
 
   useEffect(() => {
-    if (quizId) setSelectedQuiz(quizId);
-  }, [quizId, setSelectedQuiz]);
+    if (isSuccess && quiz) {
+      loadCurrentQuiz(quiz);
+    }
+  }, [isSuccess, quiz, loadCurrentQuiz]);
 
-  if (!selectedQuiz) {
-    return <div className="p-6 text-red-500">Quiz not found!</div>;
-  }
+  if (isLoading) return <div className="p-6">Loading quiz...</div>;
+  if (isError) return <div className="p-6 text-red-500">Failed to load quiz!</div>;
+  if (!selectedQuiz) return <div className="p-6 text-red-500">Quiz not found!</div>;
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result;
-    if (!destination) return;
 
-    const quizId = useQuizStore.getState().selectedQuizId;
-    if (!quizId) return;
+    if (!destination || !selectedQuiz) return;
 
     if (
       source.droppableId === DroppableAreaEnum.SIDEBAR &&
       destination.droppableId === DroppableAreaEnum.CANVAS
     ) {
-      addBlock(quizId, draggableId as BlockEnum);
+      addBlock(draggableId as BlockEnum, destination.index);
       return;
     }
 
@@ -46,19 +46,13 @@ export default function QuizEditorPage() {
       source.droppableId === DroppableAreaEnum.CANVAS &&
       destination.droppableId === DroppableAreaEnum.CANVAS
     ) {
-      const quizzes = useQuizStore.getState().quizzes;
-      const quiz = quizzes.find((q) => q.id === quizId);
-      if (!quiz) return;
-
-      const reordered = Array.from(quiz.blocks);
+      const reordered = Array.from(selectedQuiz.blocks);
       const [moved] = reordered.splice(source.index, 1);
       reordered.splice(destination.index, 0, moved);
 
-      const updatedQuizzes = quizzes.map((q) =>
-        q.id === quizId ? { ...q, blocks: reordered } : q,
-      );
-      LocalStorage.saveQuizzes(updatedQuizzes);
-      useQuizStore.setState({ quizzes: updatedQuizzes });
+      useQuizStore.setState({
+        selectedQuiz: { ...selectedQuiz, blocks: reordered },
+      });
     }
   };
 
@@ -66,10 +60,8 @@ export default function QuizEditorPage() {
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="flex flex-1 h-full overflow-hidden">
         <SidebarBlocks />
-
-        <Canvas quiz={selectedQuiz} />
-
-        <PropertiesPanel quiz={selectedQuiz} />
+        <Canvas />
+        <PropertiesPanel />
       </div>
     </DragDropContext>
   );
