@@ -57,8 +57,8 @@ src/
 1. **Clone the Repository**
 
 ```bash
-git clone <repository-url>
-cd quiz-app https://github.com/SSV96/quizz-app
+git clone https://github.com/SSV96/quizz-app-fe
+cd quiz-app-fe
 ```
 
 2. **Install Dependencies**
