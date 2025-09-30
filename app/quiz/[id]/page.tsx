@@ -130,7 +130,7 @@ export default function QuizPreview() {
   if (!quiz) {
     return <QuizNotFound />;
   }
-  console.log(quiz);
+
   if (!quiz.published) {
     return <QuizNotPublished id={quizId} />;
   }

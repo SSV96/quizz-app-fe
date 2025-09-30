@@ -25,7 +25,7 @@ export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }) => {
   const handlePublishToggle = () => {
     publishQuizMutation();
   };
-  console.log(quiz);
+
   return (
     <div className="flex justify-end w-full gap-2">
       <Zoom in>

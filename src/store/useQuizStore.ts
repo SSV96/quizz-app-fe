@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { nanoid } from 'nanoid';
-import { IQuiz, TQuizBlock, BlockEnum, QuestionKindEnum } from '../types';
+import { IQuiz, TQuizBlock } from '../types';
+import { generateBlock } from '../utils/block-generator';
 
 interface QuizStore {
   selectedQuiz: IQuiz | null;
@@ -56,48 +56,7 @@ export const useQuizStore = create<QuizStore>()(
         const selectedQuiz = get().selectedQuiz;
         if (!selectedQuiz) return;
         const order = index ?? selectedQuiz.blocks.length;
-        const newBlock: TQuizBlock =
-          type === BlockEnum.QUESTION
-            ? {
-                id: nanoid(),
-                type,
-                properties: {
-                  kind: QuestionKindEnum.SINGLE,
-                  text: 'New Question',
-                  options: [
-                    { id: nanoid(), text: 'Option 1' },
-                    { id: nanoid(), text: 'Option 2' },
-                  ],
-                  correctOptionIds: [],
-                },
-                order,
-                isDeleted: false,
-                isNew: true,
-                isUpdated: false,
-              }
-            : type === BlockEnum.BUTTON
-              ? {
-                  id: nanoid(),
-                  type,
-                  properties: {
-                    previousLabel: 'Previous',
-                    nextLabel: 'Next',
-                    submitLabel: 'Submit',
-                  },
-                  order,
-                  isDeleted: false,
-                  isNew: true,
-                  isUpdated: false,
-                }
-              : {
-                  id: nanoid(),
-                  type,
-                  order,
-                  properties: {},
-                  isDeleted: false,
-                  isNew: true,
-                  isUpdated: false,
-                };
+        const newBlock: TQuizBlock = generateBlock({ type, order });
 
         const newBlocks =
           typeof index === 'number'
