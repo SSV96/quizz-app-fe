@@ -2,11 +2,11 @@
 import React, { ChangeEvent, FC } from 'react';
 import { Delete } from '@mui/icons-material';
 import { Button, TextField, IconButton, Radio, Checkbox, Stack } from '@mui/material';
-import { QuestionBlock, QuestionKindEnum, QuestionOption } from '../../types';
+import { IQuestionBlock, QuestionKindEnum, IQuestionOption } from '../../types';
 
-type TQuestionProperties = QuestionBlock['properties'];
+type TQuestionProperties = IQuestionBlock['properties'];
 interface QuestionOptionsEditorProps {
-  selectedQuestion: QuestionBlock;
+  selectedQuestion: IQuestionBlock;
   onAddOption: VoidFunction;
   onOptionChange: (
     options?: TQuestionProperties['options'],
@@ -49,7 +49,7 @@ export const QuestionOptionsEditor: FC<QuestionOptionsEditorProps> = ({
     <>
       <h4 style={{ fontWeight: 600, marginBottom: 8 }}>Options</h4>
 
-      {selectedQuestion.properties.options?.map((opt: QuestionOption) => (
+      {selectedQuestion.properties.options?.map((opt: IQuestionOption) => (
         <Stack key={opt.id} direction="row" spacing={1} alignItems="center" sx={{ mb: 1 }}>
           <TextField
             fullWidth

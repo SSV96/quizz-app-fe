@@ -1,14 +1,17 @@
 'use client';
-import { QuestionBlock } from '@/src/types';
+import { IQuestionBlock } from '@/src/types';
 import React, { ChangeEventHandler, FC } from 'react';
 import { TextField } from '@mui/material';
 
-interface IProps {
-  selectedQuestion: QuestionBlock;
+interface ITextAnswerEditorProps {
+  selectedQuestion: IQuestionBlock;
   onTextAnswerChange: ChangeEventHandler<HTMLInputElement>;
 }
 
-export const TextAnswerEditor: FC<IProps> = ({ selectedQuestion, onTextAnswerChange }) => {
+export const TextAnswerEditor: FC<ITextAnswerEditorProps> = ({
+  selectedQuestion,
+  onTextAnswerChange,
+}) => {
   return (
     <TextField
       fullWidth

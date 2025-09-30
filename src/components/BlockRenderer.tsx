@@ -51,16 +51,16 @@ const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => 
     return (
       <div className="flex justify-between gap-x-2">
         <Button variant="contained" color="primary" disabled>
-          {block.properties.previousLabel}
+          {block.properties.previousLabel as string}
         </Button>
 
         <div className="flex justify-between gap-x-2">
           <Button variant="contained" color="primary" disabled>
-            {block.properties.nextLabel}
+            {block.properties.nextLabel as string}
           </Button>
 
           <Button variant="contained" color="primary" disabled>
-            {block.properties.submitLabel}
+            {block.properties.submitLabel as string}
           </Button>
         </div>
       </div>

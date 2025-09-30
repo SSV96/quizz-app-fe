@@ -1,9 +1,9 @@
 'use client';
-import { TextBlock } from '@/src/types';
+import { ITextBlock } from '@/src/types';
 import React, { FC } from 'react';
 
 interface ITextBlockEditorProps {
-  block: TextBlock;
+  block: ITextBlock;
 }
 
 export const TextBlockEditor: FC<ITextBlockEditorProps> = ({ block }) => {
