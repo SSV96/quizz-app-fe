@@ -58,7 +58,7 @@ src/
 
 ```bash
 git clone https://github.com/SSV96/quizz-app-fe
-cd quiz-app-fe
+cd quizz-app-fe
 ```
 
 2. **Install Dependencies**
