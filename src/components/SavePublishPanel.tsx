@@ -4,26 +4,28 @@ import SaveIcon from '@mui/icons-material/Save';
 import { Flag } from '@mui/icons-material';
 import cn from 'classnames';
 import { IQuiz } from '../types';
-import { usePublishedQuiz, useUpdateQuiz } from '../hooks/useQuizzes';
+import { usePublishQuiz, useUpdateQuiz } from '../hooks/useQuizzes';
 
 interface SavePublishPanelProps {
-  quiz?: Partial<IQuiz>;
+  quiz: IQuiz;
 }
 
 export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }) => {
   const { mutate } = useUpdateQuiz();
-  const { mutate: publishQuizMutation, isPending } = usePublishedQuiz();
+  const { mutate: publishQuizMutation, isPending } = usePublishQuiz(quiz.id);
 
-  if (!quiz) return null;
+  if (!quiz) {
+    return null;
+  }
 
   const handleSave = () => {
     mutate(quiz);
   };
 
   const handlePublishToggle = () => {
-    publishQuizMutation(quiz?.id || '');
+    publishQuizMutation();
   };
-
+  console.log(quiz);
   return (
     <div className="flex justify-end w-full gap-2">
       <Zoom in>

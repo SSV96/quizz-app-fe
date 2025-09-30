@@ -95,18 +95,20 @@ export const useDeleteQuiz = () => {
   });
 };
 
-const publishQuiz = async (id: string) => {
+const publishQuiz = async (id: string): Promise<void> => {
   await api.post(`/quizzes/${id}/publish`);
 };
 
-export const usePublishedQuiz = () => {
+export const usePublishQuiz = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: publishQuiz,
+    mutationFn: () => publishQuiz(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['quizzes'] });
-      toast.success('Successfuly Published Quiz');
+      queryClient.invalidateQueries({ queryKey: ['quiz', id] });
+
+      toast.success('Successfully Published Quiz');
     },
     onError: () => {
       toast.error('Unable to Publish Quiz');

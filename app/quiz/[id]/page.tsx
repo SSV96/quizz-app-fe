@@ -16,6 +16,7 @@ import QuizSubmitted from '@/src/components/quiz/QuizSubmitted';
 import { QuizNavigation } from '@/src/components/quiz/QuizNavigation';
 import { QuestionPreviewBlock } from '@/src/components/QuestionBlock';
 import { useQuiz } from '@/src/hooks/useQuizzes';
+import { LoaderIcon } from 'react-hot-toast';
 
 export default function QuizPreview() {
   const params = useParams();
@@ -119,7 +120,7 @@ export default function QuizPreview() {
   }
 
   if (isLoading) {
-    return <div className="p-6 text-center">Loading quiz...</div>;
+    return <LoaderIcon />;
   }
 
   if (isError) {
@@ -129,7 +130,7 @@ export default function QuizPreview() {
   if (!quiz) {
     return <QuizNotFound />;
   }
-
+  console.log(quiz);
   if (!quiz.published) {
     return <QuizNotPublished id={quizId} />;
   }

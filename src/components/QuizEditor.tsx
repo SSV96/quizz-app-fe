@@ -8,6 +8,7 @@ import PropertiesPanel from '@/src/components/properties/PropertiesPanel';
 import { useQuizStore } from '@/src/store/useQuizStore';
 import { DroppableAreaEnum, BlockEnum } from '@/src/types';
 import { useQuiz } from '../hooks/useQuizzes';
+import { LoaderIcon } from 'react-hot-toast';
 
 export default function QuizEditorPage() {
   const params = useParams();
@@ -25,7 +26,12 @@ export default function QuizEditorPage() {
     }
   }, [isSuccess, quiz, loadCurrentQuiz]);
 
-  if (isLoading) return <div className="p-6">Loading quiz...</div>;
+  if (isLoading)
+    return (
+      <div className="p-6">
+        <LoaderIcon />
+      </div>
+    );
   if (isError) return <div className="p-6 text-red-500">Failed to load quiz!</div>;
   if (!selectedQuiz) return <div className="p-6 text-red-500">Quiz not found!</div>;
 
