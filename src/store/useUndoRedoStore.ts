@@ -93,7 +93,7 @@ export const useUndoRedoStore = create<UndoRedoState>((set, get) => ({
   },
 
   reorderBlocks: (blocks) => {
-    get().set(blocks.map((b, i) => ({ ...b, order: i + 1 })));
+    get().set(blocks.map((b, i) => ({ ...b, order: i + 1, isUpdated: !b.isNew })));
   },
 
   updateBlock: (blockId: string, properties: Partial<BlockProperties>) => {
