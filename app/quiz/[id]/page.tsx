@@ -144,7 +144,9 @@ export default function QuizPreview() {
       {hasQuestions ? (
         <>
           {headerBlock?.properties.text && (
-            <p className="mb-4 justify-center">{headerBlock.properties.text || 'Lets Play Quiz'}</p>
+            <p className="mb-4 flex justify-center">
+              {headerBlock.properties.text || 'Lets Play Quiz'}
+            </p>
           )}
 
           <QuestionPreviewBlock block={currentBlock} index={currentIndex} />
@@ -158,7 +160,7 @@ export default function QuizPreview() {
           />
 
           {footerBlock?.properties.text && (
-            <p className="mt-4 justify-center">
+            <p className="mt-4 flex justify-center">
               {footerBlock.properties.text || 'Quizz App is Best'}
             </p>
           )}
