@@ -1,24 +1,21 @@
 'use client';
 import React, { FC, ChangeEvent } from 'react';
-import { IQuestionBlock, QuestionKindEnum } from '../../types';
-import { useQuizStore } from '../../store/useQuizStore';
+import { BlockProperties, IQuestionBlock, QuestionKindEnum } from '../../types';
 import { TextAnswerEditor } from './TextAnswerEditor';
 import { QuestionOptionsEditor } from './QuestionOptionsEditor';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 interface QuestionEditorProps {
   block: IQuestionBlock;
+  updateBlock: (blockId: string, properties: Partial<BlockProperties>) => void;
 }
+
 type TQuestionProperties = IQuestionBlock['properties'];
 
-export const QuestionEditor: FC<QuestionEditorProps> = ({ block }) => {
-  const updateBlock = useQuizStore((s) => s.updateBlock);
+export const QuestionEditor: FC<QuestionEditorProps> = ({ block, updateBlock }) => {
+  if (!block) return null;
+
   const { id, properties } = block;
-
-  if (!block) {
-    return;
-  }
-
   const selectedQuestionKind = properties.kind ?? QuestionKindEnum.SINGLE;
 
   const handleQuestionKindChange = (e: SelectChangeEvent) => {

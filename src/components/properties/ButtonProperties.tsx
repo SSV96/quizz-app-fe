@@ -1,10 +1,10 @@
-import { useQuizStore } from '@/src/store/useQuizStore';
 import { IButtonBlock } from '@/src/types';
 import { FormControl, TextField } from '@mui/material';
 import React, { FC, ChangeEventHandler, FocusEventHandler } from 'react';
 
 interface IButtonPropertiesProps {
   block: IButtonBlock;
+  updateBlock: (blockId: string, properties: Partial<IButtonBlock['properties']>) => void;
 }
 
 const defaultFieldLabelMap = {
@@ -20,21 +20,18 @@ type THandleLabelBlurFn = (
   fieldName: keyof IButtonBlock['properties'],
 ) => FocusEventHandler<HTMLInputElement>;
 
-const ButtonProperties: FC<IButtonPropertiesProps> = ({ block }) => {
+const ButtonProperties: FC<IButtonPropertiesProps> = ({ block, updateBlock }) => {
   const { properties, id } = block;
   const { previousLabel, nextLabel, submitLabel } = properties;
-  const updateBlock = useQuizStore((s) => s.updateBlock);
 
   const handleLabelUpdate: THandleLabelUpdateFn = (fieldName) => (e) => {
     const value = e.target.value;
-
     updateBlock(id, { [fieldName]: value });
   };
 
   const handleInputBlur: THandleLabelBlurFn = (fieldName) => (e) => {
     const value = e.target.value;
     if (!!value) return;
-
     updateBlock(id, { [fieldName]: defaultFieldLabelMap[fieldName] });
   };
 

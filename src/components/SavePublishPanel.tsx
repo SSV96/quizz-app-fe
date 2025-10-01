@@ -1,28 +1,37 @@
-import React, { FC } from 'react';
+'use client';
+import React, { FC, useEffect } from 'react';
 import { Button, Zoom } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { Flag } from '@mui/icons-material';
 import cn from 'classnames';
-import { IQuiz } from '../types';
 import { usePublishQuiz, useUpdateQuiz } from '../hooks/useQuizzes';
+import { useQuizStore } from '../store/useQuizStore';
+import toast from 'react-hot-toast';
 
-interface SavePublishPanelProps {
-  quiz: IQuiz;
-}
+export const SavePublishPanel: FC = () => {
+  const selectedQuiz = useQuizStore((s) => s.selectedQuiz);
 
-export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }) => {
-  const { mutate } = useUpdateQuiz();
-  const { mutate: publishQuizMutation, isPending } = usePublishQuiz(quiz.id);
+  const saveQuizToBE = useQuizStore((s) => s.saveQuizToBE);
 
-  if (!quiz) {
-    return null;
-  }
+  const { mutate: publishQuizMutation, isPending: isPublishPending } = usePublishQuiz(
+    selectedQuiz?.id ?? '',
+  );
+  const { mutate: updateQuizFn, isPending: isUpdatePending } = useUpdateQuiz();
+
+  if (!selectedQuiz) return null;
 
   const handleSave = () => {
-    mutate(quiz);
+    if (!updateQuizFn) return;
+
+    saveQuizToBE(updateQuizFn);
   };
 
   const handlePublishToggle = () => {
+    if (!selectedQuiz) return;
+    if (selectedQuiz.published) {
+      toast.success('Quiz already published');
+      return;
+    }
     publishQuizMutation();
   };
 
@@ -32,15 +41,16 @@ export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }) => {
         <Button
           variant="contained"
           color="inherit"
+          disabled={selectedQuiz.published || isPublishPending}
           onClick={handlePublishToggle}
           className={cn('flex items-center gap-1 !rounded-md !px-2 !py-3 shadow-lg', {
-            '!bg-green-500 !hover:bg-green-600 !text-white': quiz.published,
-            '!bg-gray-400 !hover:bg-gray-500 !text-white': !quiz.published,
+            '!bg-green-500 !hover:bg-green-600 !text-white': selectedQuiz.published,
+            '!bg-gray-400 !hover:bg-gray-500 !text-white': !selectedQuiz.published,
           })}
         >
           <Flag />
           <span className="inline-block w-20 text-center">
-            {quiz.published ? 'Published' : 'Draft'}
+            {selectedQuiz.published ? 'Published' : 'Draft'}
           </span>
         </Button>
       </Zoom>
@@ -49,11 +59,12 @@ export const SavePublishPanel: FC<SavePublishPanelProps> = ({ quiz }) => {
         <Button
           variant="contained"
           color="success"
+          disabled={isUpdatePending}
           startIcon={<SaveIcon />}
           onClick={handleSave}
           className="!rounded-md !px-2 !py-3 shadow-lg"
         >
-          {isPending ? 'Saving...' : 'Save Quiz'}
+          {isUpdatePending ? 'Saving...' : 'Save Quiz'}
         </Button>
       </Zoom>
     </div>

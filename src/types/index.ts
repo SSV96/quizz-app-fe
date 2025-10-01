@@ -80,7 +80,7 @@ export interface UpdateFlags {
   isUpdated?: boolean;
   isDeleted?: boolean;
 }
-
+export type BlockProperties = TQuizBlock['properties'];
 export type TQuizBlock = IQuestionBlock | ITextBlock | IButtonBlock | IUnknownBlock;
 
 export interface IQuizSummary {
@@ -94,4 +94,10 @@ export interface IQuiz extends IQuizSummary {
   blocks: TQuizBlock[];
   published: boolean;
   updatedAt: string;
+}
+
+export interface EditorState<T> {
+  past: T[];
+  present: T;
+  future: T[];
 }

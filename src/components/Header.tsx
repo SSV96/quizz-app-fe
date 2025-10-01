@@ -7,18 +7,20 @@ import QuizEditorHeader from './QuizEditorHeader';
 
 const Header = () => {
   const pathname = usePathname();
-  const isHome = pathname === '/';
-  const isQuizEditor = pathname.match('/quiz/edit');
 
+  const isHome = pathname === '/';
+  const isQuizEditor = pathname.startsWith('/quiz/edit');
+  console.log({ isQuizEditor });
   return (
     <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-colors">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center w-full">
         <Link href="/" className="flex items-center gap-2">
           <Logo />
         </Link>
 
-        {isHome && <Navbar isHome={isHome} />}
+        <div className="flex-1" />
 
+        {isHome && <Navbar isHome={isHome} />}
         {isQuizEditor && <QuizEditorHeader />}
       </div>
     </header>

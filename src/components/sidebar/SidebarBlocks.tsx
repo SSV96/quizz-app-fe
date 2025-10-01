@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { Droppable, Draggable } from '@hello-pangea/dnd';
 import { BlockEnum, DroppableAreaEnum } from '../../types';
 import cn from 'classnames';
-import { useQuizStore } from '@/src/store/useQuizStore';
+import { useUndoRedoStore } from '@/src/store/useUndoRedoStore';
 
 const palette = [
   { type: BlockEnum.HEADING, label: 'Heading' },
@@ -13,8 +13,7 @@ const palette = [
 ];
 
 export const SidebarBlocks: FC = () => {
-  const selectedQuiz = useQuizStore((s) => s.selectedQuiz);
-  const { blocks = [] } = selectedQuiz ?? {};
+  const blocks = useUndoRedoStore((s) => s.present);
 
   const checkIsBlockDisabled = (blockType: BlockEnum) => {
     if (blockType === BlockEnum.QUESTION) return false;

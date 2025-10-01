@@ -1,10 +1,10 @@
 import React from 'react';
-import { TQuizBlock, BlockEnum } from '../types';
+import { TQuizBlock, BlockEnum, BlockProperties } from '../types';
 import { TextField, Button } from '@mui/material';
 
 interface BlockRendererProps {
   block: TQuizBlock;
-  updateBlock: (id: string, properties: Partial<TQuizBlock['properties']>) => void;
+  updateBlock: (id: string, properties: Partial<BlockProperties>) => void;
 }
 
 const BlockRenderer: React.FC<BlockRendererProps> = ({ block, updateBlock }) => {

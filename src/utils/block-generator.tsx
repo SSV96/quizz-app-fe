@@ -15,6 +15,8 @@ export const generateBlock = ({ type, order }: GenerateBlockOptions): TQuizBlock
         properties: {
           kind: QuestionKindEnum.SINGLE,
           text: 'New Question',
+          textAnswer: 'Write Your Answer Here',
+          title: 'Write Your Question Here',
           options: [
             { id: nanoid(), text: 'Option 1' },
             { id: nanoid(), text: 'Option 2' },
@@ -48,7 +50,7 @@ export const generateBlock = ({ type, order }: GenerateBlockOptions): TQuizBlock
         type,
         order,
         properties: {
-          text: 'write some text',
+          text: `Write Text for ${type} Here`,
         },
         isDeleted: false,
         isNew: true,

@@ -1,30 +1,36 @@
+'use client';
 import { Draggable } from '@hello-pangea/dnd';
 import { FC } from 'react';
 import BlockRenderer from '../BlockRenderer';
-import { TQuizBlock } from '../../types';
+import { BlockProperties, TQuizBlock } from '../../types';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useQuizStore } from '../../store/useQuizStore';
+import { useUndoRedoStore } from '../../store/useUndoRedoStore';
 import cn from 'classnames';
 
 interface DraggableItemProps {
   block: TQuizBlock;
   index: number;
+  updateBlock: (blockId: string, properties: Partial<BlockProperties>) => void;
 }
 
-const DraggableItem: FC<DraggableItemProps> = ({ block, index }) => {
-  const selectedBlockId = useQuizStore((s) => s.selectedBlockId);
-  const selectBlock = useQuizStore((s) => s.setSelectedBlock);
-  const updateBlock = useQuizStore((s) => s.updateBlock);
-  const deleteBlock = useQuizStore((s) => s.deleteBlock);
+const DraggableItem: FC<DraggableItemProps> = ({ block, index, updateBlock }) => {
+  const selectedBlockId = useUndoRedoStore((s) => s.selectedBlockId);
+  const setSelectedBlock = useUndoRedoStore((s) => s.setSelectedBlock);
 
-  const handleDeleteBlock = (e: React.MouseEvent<SVGSVGElement, MouseEvent>): void => {
+  const blocks = useUndoRedoStore((s) => s.present);
+  const setBlocks = useUndoRedoStore((s) => s.set);
+
+  const handleDeleteBlock = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     e.stopPropagation();
-    deleteBlock(block.id);
+
+    const updated = blocks
+      .map((b) => (b.id === block.id ? (b.isNew ? null : { ...b, isDeleted: true }) : b))
+      .filter(Boolean) as TQuizBlock[];
+
+    setBlocks(updated);
   };
 
-  if (block.isDeleted) {
-    return;
-  }
+  if (block.isDeleted) return null;
 
   return (
     <Draggable draggableId={block.id} index={index}>
@@ -41,8 +47,12 @@ const DraggableItem: FC<DraggableItemProps> = ({ block, index }) => {
               'border-gray-200': block.id !== selectedBlockId,
             },
           )}
-          onClick={() => selectBlock(block.id)}
+          onClick={() => setSelectedBlock(block.id)}
         >
+          <span className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 text-sm font-medium mr-3">
+            {index + 1}
+          </span>
+
           <div className="flex-1">
             <BlockRenderer block={block} updateBlock={updateBlock} />
           </div>
