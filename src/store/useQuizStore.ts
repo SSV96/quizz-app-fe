@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 
 interface QuizStore {
   selectedQuiz: { id: string; title: string; published: boolean } | null;
-  saveQuizToBE: (updateQuizFn: (quiz: IQuiz) => void) => void;
+  saveQuizToBE: (updateQuizFn: (quiz: Partial<IQuiz>) => void) => void;
   setSelectedQuiz: (quiz: Partial<BlockProperties>) => void;
 }
 
@@ -34,13 +34,14 @@ export const useQuizStore = create<QuizStore>((set, get) => ({
     const blocksToSave = blocks.filter((b) => !(b.isNew && b.isDeleted));
     const changedBlocks = blocksToSave.filter((b) => b.isNew || b.isUpdated || b.isDeleted);
 
-    if (changedBlocks.length === 0) return;
+    const hasChangedBlocks = changedBlocks.length === 0;
 
     const payload = {
-      ...metadata,
-      updatedAt: new Date().toISOString(),
-      blocks: changedBlocks,
+      id: metadata.id,
+      title: metadata.title,
+      ...(!hasChangedBlocks ? { blocks: changedBlocks } : []),
     };
+
     const erros = validateQuiz(payload);
 
     if (erros.length) {

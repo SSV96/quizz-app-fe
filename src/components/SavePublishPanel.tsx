@@ -1,5 +1,5 @@
 'use client';
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { Button, Zoom } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { Flag } from '@mui/icons-material';
@@ -7,6 +7,7 @@ import cn from 'classnames';
 import { usePublishQuiz, useUpdateQuiz } from '../hooks/useQuizzes';
 import { useQuizStore } from '../store/useQuizStore';
 import toast from 'react-hot-toast';
+import { QuizStatus } from '../types';
 
 export const SavePublishPanel: FC = () => {
   const selectedQuiz = useQuizStore((s) => s.selectedQuiz);
@@ -48,9 +49,9 @@ export const SavePublishPanel: FC = () => {
             '!bg-gray-400 !hover:bg-gray-500 !text-white': !selectedQuiz.published,
           })}
         >
-          <Flag />
+          {selectedQuiz.published && <Flag />}
           <span className="inline-block w-20 text-center">
-            {selectedQuiz.published ? 'Published' : 'Draft'}
+            {selectedQuiz.published ? QuizStatus.PUBLISHED : QuizStatus.DRAFT}
           </span>
         </Button>
       </Zoom>

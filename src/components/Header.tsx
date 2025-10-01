@@ -10,7 +10,7 @@ const Header = () => {
 
   const isHome = pathname === '/';
   const isQuizEditor = pathname.startsWith('/quiz/edit');
-  console.log({ isQuizEditor });
+
   return (
     <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-colors">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center w-full">

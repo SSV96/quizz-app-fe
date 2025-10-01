@@ -6,20 +6,16 @@ import {
   ITextBlockProperties,
 } from '../types';
 
-export const validateQuiz = (quiz: IQuiz) => {
+export const validateQuiz = (quiz: Partial<IQuiz>) => {
   const errors: string[] = [];
 
   if (!quiz.title || quiz.title.trim() === '') {
     errors.push('Quiz title is required');
   }
 
-  const activeBlocks = quiz.blocks.filter((b) => !b.isDeleted);
+  const activeBlocks = quiz?.blocks?.filter((b) => !b.isDeleted);
 
-  if (!activeBlocks || activeBlocks.length === 0) {
-    errors.push('At least one block is required');
-  }
-
-  activeBlocks.forEach((block, idx) => {
+  activeBlocks?.forEach((block, idx) => {
     const props = block.properties as BlockProperties;
 
     if (block.type === BlockEnum.QUESTION) {

@@ -68,7 +68,7 @@ export default function QuizEditorPage() {
       </div>
     );
   if (isError) return <div className="p-6 text-red-500">Failed to load quiz!</div>;
-  console.log({ selectedQuiz });
+
   if (!selectedQuiz) return <div className="p-6 text-gray-500">Loading quiz...</div>;
 
   return (
